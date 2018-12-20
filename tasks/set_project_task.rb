@@ -88,11 +88,11 @@ class SetProjectTask < HeadlessBrowserTask
       each_pull_request do |url, author|
         next unless author_whitelist.include?(author)
 
-        logger.debug "Pull Request: ##{url.split('/').last} (#{author})"
+        logger.debug "Analyzing PR: ##{url.split('/').last} (#{author})"
         visit(url, log: false)
 
         projects = expected_projects_for(author) - current_projects
-        logger.debug "  - Adding: #{projects}"
+        logger.debug "  - Adding: #{projects}" if projects.any?
 
         projects.each { |project| toggle_project(project) }
       end
