@@ -8,8 +8,8 @@
 # This script automates the updating the "Projects" on PRs so that PR owners
 # don't have to do it themselves. It's intended to run periodically on cron.
 #
-# It expects a `config.json` to exist under the project root that
-# specifies which users should map to which projects
+# It expects a JSON config file that specifies which users should map to which
+# projects
 #
 # E.g.
 #
@@ -64,13 +64,15 @@ require "active_support/core_ext/object/blank.rb"
 class SetProjectTask < HeadlessBrowserTask
   include GithubProjectsHelpers
 
-  CONFIG_FILE = File.join(ROOT, "config.json")
+  DEFAULT_CONFIG_FILE = File.join(ROOT, "config.json")
 
-  def self.run!
-    new.run!
+  def self.run!(opts = {})
+    new(opts).run!
   end
 
-  def initialize
+  def initialize(opts = {})
+    @opts = opts
+
     setup_logger
 
     read_config

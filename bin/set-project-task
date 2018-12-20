@@ -1,5 +1,27 @@
 #!/usr/bin/env ruby
 
 require_relative "../tasks/set_project_task"
+require "optparse"
 
-SetProjectTask.run!
+options = {}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: bin/#{__FILE__} [options]"
+
+  options[:config_file] = SetProjectTask::DEFAULT_CONFIG_FILE
+  opts.on(
+    "-cCONFIGFILE",
+    "--config-file=cCONFIGFILE",
+    "Config File to use (default: #{options[:config_file]})"
+  ) do |c|
+    options[:config_file] = c
+  end
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end
+
+parser.parse!
+SetProjectTask.run!(options)

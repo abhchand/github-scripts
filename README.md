@@ -10,7 +10,7 @@ Automatically sets the "Project" on each Github PR to the appropriate team(s) ba
   <img src="meta/project-menu.png" height="250" />
 </p>
 
-Specify the mapping in a file called `config.json` in the project root:
+Specify the mapping in a json file as follows:
 
 ```json
 # config.json
@@ -34,7 +34,7 @@ Run
 GITHUB_USERNAME=**** \
   GITHUB_PASSWORD=**** \
   GITHUB_OTP_SECRET=*** \
-  bin/set-project-task
+  bin/set-project-task --config-file config.json
 ```
 
 The username and password are you github credentials. See `setup_project_task.rb` for info on finding your OTP Secret.

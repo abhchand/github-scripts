@@ -21,7 +21,7 @@ class HeadlessBrowserTask
   ORG_NAME = ENV["GITHUB_ORG_NAME"] || "callrail"
   REPO_NAME = ENV["GITHUB_REPO_NAME"] || "callrail"
 
-  def initialize
+  def initialize(opts = {})
     setup_driver
     setup_headless_window
 
@@ -55,10 +55,10 @@ class HeadlessBrowserTask
   end
 
   def read_config
-    config_file = self.class::CONFIG_FILE
+    config_file = File.expand_path(@opts[:config_file], ROOT)
 
     unless File.exist?(config_file)
-      raise "Expecting `#{config_file}`!"
+      raise "Could not find config file `#{config_file}`!"
     end
 
     @config = JSON.parse(File.read(config_file))
