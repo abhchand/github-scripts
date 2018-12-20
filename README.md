@@ -6,7 +6,9 @@ A series of helpful scripts to automate common github tasks
 
 Automatically sets the "Project" on each Github PR to the appropriate team(s) based on the mapping of users to projects you specify.
 
-![Project Menu](/meta/project-menu.png)
+<p>
+  <img src="meta/project-menu.png" height="250" />
+</p>
 
 Specify the mapping in a file called `config.json` in the project root:
 
