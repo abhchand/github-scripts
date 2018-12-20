@@ -1,8 +1,14 @@
 # Github Scripts
 
-A series of helpful scripts to automate common github tasks
+A series of helpful scripts to automate common github tasks.
 
-# Set Project Task
+These scripts are implemented using the [Github REST API](https://developer.github.com/v3/) where possible. For some actions that are not supported through the API, the scripts use a headless browser to log in to github and perform the action.
+
+Current Tasks:
+
+- [Set Project](#task-set-project)
+
+## <a name="task-set-project"></a> Set Project Task
 
 Automatically sets the "Project" on each Github PR to the appropriate team(s) based on the mapping of users to projects you specify.
 
