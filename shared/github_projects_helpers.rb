@@ -8,8 +8,7 @@ module GithubProjectsHelpers
       .detect { |f| f.text =~ /Projects\n/ }
   end
 
-  def expected_projects
-    author = pr_author
+  def expected_projects_for(author)
     projects = []
     mapping = config["project_to_users_mapping"]
 

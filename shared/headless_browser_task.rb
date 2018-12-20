@@ -139,12 +139,6 @@ class HeadlessBrowserTask
     @otp_secret ||= ENV["GITHUB_OTP_SECRET"]
   end
 
-  # Grabs the author of the PR currently being viewed by scraping the DOM
-  # element
-  def pr_author
-    driver.find_element(:class, "pull-header-username").text
-  end
-
   def repo_url
     "https://github.com/#{ORG_NAME}/#{REPO_NAME}"
   end
@@ -154,6 +148,10 @@ class HeadlessBrowserTask
     page ? "#{url}?page=#{page}" : url
   end
 
+  def pull_url(id)
+    [repo_url, "pull", id].join("/")
+  end
+
   # Queries for the list of all pull requests and then yields them one at a
   # time to the provided block.
   # NOTE: This actually visits the /pulls page and generates the URL list
@@ -161,29 +159,36 @@ class HeadlessBrowserTask
   def each_pull_request(&block)
     visit(pulls_url)
 
-    urls = []
+    all_pulls = []
 
     (1..max_pulls_page).each do |page|
       logger.debug "Find pull requests on page #{page}"
       visit(pulls_url(page: page))
 
-      # Github doesn't provide a convenient class or tag structure to identify
-      # PR links. So we just find *all* links and filter by those that have
-      # an `id` with a pattern `issue-id-XXXX`
-      parsed_urls =
-        driver.find_element(:class, "repository-content")
-        .find_elements(:tag_name, "a")
-        .select { |a| a["id"] =~ /issue-id-[\d+]/ }
-        .map { |a| a["href"] }
+      # Parse the links at the bottom of each PR box to determine PR ID and
+      # author
+      # E.g. #12159 opened 6 hours ago by melindaweathers
+      pulls =
+        driver
+        .find_element(:class, "repository-content")
+        .find_elements(:class, "opened-by")
+        .map do |span|
+          text = span.text.split(" ")
 
-      logger.debug "Found #{parsed_urls.count} pull requests"
-      urls << parsed_urls
+          {
+            url: pull_url(text.first.delete("#")),
+            author: text.last
+          }
+        end
+
+      logger.debug "Found #{pulls.count} pull requests"
+      all_pulls << pulls
     end
 
-    urls.flatten!
-    logger.info "Found total #{urls.count} pull requests"
+    all_pulls.flatten!
+    logger.info "Found total #{all_pulls.count} pull requests"
 
-    urls.each { |url| yield(url) }
+    all_pulls.each { |pull| yield(pull[:url], pull[:author]) }
   end
 
   # Gets the page number of the last pull request page since the above method
