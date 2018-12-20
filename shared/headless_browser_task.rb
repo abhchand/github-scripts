@@ -11,6 +11,7 @@
 
 require_relative "multi_channel_logger"
 
+require "dotenv/load"
 require "rotp"
 require "selenium-webdriver"
 

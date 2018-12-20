@@ -48,7 +48,7 @@ Automatically sets the "Project" on each Github PR to the appropriate team(s) ba
   <img src="meta/project-menu.png" height="250" />
 </p>
 
-Specify the mapping in a json file as follows:
+Create a config file mapping users to projects:
 
 ```json
 # config.json
@@ -60,19 +60,9 @@ Specify the mapping in a json file as follows:
 }
 ```
 
-Build
-
-```
-bundle install
-```
-
 Run
 
 ```
-GITHUB_USERNAME=**** \
-  GITHUB_PASSWORD=**** \
-  GITHUB_OTP_SECRET=*** \
-  bin/set-project-task --config-file config.json
+bundle install
+bin/set-project-task --config-file config.json
 ```
-
-The username and password are you github credentials. See `setup_project_task.rb` for info on finding your OTP Secret.
