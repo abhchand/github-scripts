@@ -27,7 +27,7 @@ class ListPullsByProject < ApiTask
     projects = fetch_projects
 
     projects.each do |project|
-      str += "=== #{project['name']}\n\n"
+      str += "=== #{project['name']}\n"
       columns = fetch_columns_for(project)
 
       columns.each do |column|
@@ -36,12 +36,14 @@ class ListPullsByProject < ApiTask
           next
         end
 
-        str += "Column: #{column['name']}\n"
+        str += "\nColumn: #{column['name']}\n"
         cards = fetch_cards_in(column)
 
         cards.each do |card|
           issue = fetch_issue_for(card)
-          str += "- #{issue['html_url']} (#{issue['title']})\n"
+          url = issue["html_url"]
+          title = truncate(issue["title"], 45)
+          str += "- #{url} (#{title})\n"
         end
       end
 
@@ -103,5 +105,10 @@ class ListPullsByProject < ApiTask
 
   def skip_column?(column)
     @opts[:skip_columns].include?(column["name"].downcase)
+  end
+
+  def truncate(str, len)
+    return str if str.length < len
+    str[0, len - 3] + "..."
   end
 end
