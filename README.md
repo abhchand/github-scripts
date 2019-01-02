@@ -20,7 +20,7 @@ Available Tasks:
 Automatically sets the "Project" on each Github PR to the appropriate team(s) based on the mapping of users to projects you specify.
 
 <p>
-  <img src="meta/project-menu.png" height="250" />
+  <img src="meta/project-menu.png" height="175" />
 </p>
 
 Create a config file mapping users to projects:
@@ -47,7 +47,7 @@ bin/set-project-task --config-file config.json
 Lists all issues in a project. Convenient format to copy-paste into Slack.
 
 <p>
-  <img src="meta/project-board.png" height="250" />
+  <img src="meta/project-board.png" height="175" />
 </p>
 
 
