@@ -7,6 +7,7 @@ These scripts are implemented using the [Github REST API](https://developer.gith
 Current Tasks:
 
 - [Set Project](#task-set-project)
+- [List Issues in Project](#task-list-project-issues)
 
 ## Initial Setup
 
@@ -65,4 +66,23 @@ Run
 ```
 bundle install
 bin/set-project-task --config-file config.json
+```
+
+### <a name="task-list-project-issues"></a> List Issues in Project
+
+Lists all issues in a project. Convenient format to copy-paste into Slack.
+
+<p>
+  <img src="meta/project-board.png" height="250" />
+</p>
+
+
+Run
+
+```
+bundle install
+bin/list-project-issues-task --project-ids=6,9
+
+# Skip certain columns in your Projects
+bin/list-project-issues-task --project-ids=6,9 --skip-columns="Shipped","Code Review"
 ```
