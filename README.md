@@ -4,10 +4,12 @@ A series of helpful scripts to automate common github tasks.
 
 These scripts are implemented using the [Github REST API](https://developer.github.com/v3/) where possible. For some actions that are not supported through the API, the scripts use a headless browser to log in to github and perform the action.
 
-Current Tasks:
+Available Tasks:
 
-- [Set Project](#task-set-project)
-- [List Issues in Project](#task-list-project-issues)
+| Task | Description |
+| ------------- | ------------- |
+| [Set Project](#task-set-project) | Ensure a "Project" is always set on certain PRs |
+| [List Issues in Project](#task-list-project-issues) | List all Issues (PRs) in a Project |
 
 ## Initial Setup
 
