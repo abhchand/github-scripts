@@ -37,13 +37,9 @@ class ApiTask < BaseTask
 
     if access_token.blank?
       logger.fatal("Env not set correctly")
-      puts "Please set `GITHUB_ACCESS_TOKEN`"
+      puts "Please set `GITHUB_ACCESS_TOKEN` and `GITHUB_USERNAME`"
       exit
     end
-  end
-
-  def access_token
-    @access_token ||= ENV["GITHUB_ACCESS_TOKEN"]
   end
 
   def get(path, opts = {})

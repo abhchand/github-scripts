@@ -21,6 +21,22 @@ class BaseTask
 
   private
 
+  def access_token
+    @access_token ||= ENV["GITHUB_ACCESS_TOKEN"]
+  end
+
+  def username
+    @username ||= ENV["GITHUB_USERNAME"]
+  end
+
+  def password
+    @password ||= ENV["GITHUB_PASSWORD"]
+  end
+
+  def otp_secret
+    @otp_secret ||= ENV["GITHUB_OTP_SECRET"]
+  end
+
   def setup_logger
     # TODO: Avoid using `caller` in the future
     # We use it to get the name of the invoking class/file so we can

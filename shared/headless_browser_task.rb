@@ -129,18 +129,6 @@ class HeadlessBrowserTask < BaseTask
     end
   end
 
-  def username
-    @username ||= ENV["GITHUB_USERNAME"]
-  end
-
-  def password
-    @password ||= ENV["GITHUB_PASSWORD"]
-  end
-
-  def otp_secret
-    @otp_secret ||= ENV["GITHUB_OTP_SECRET"]
-  end
-
   def repo_url
     "https://github.com/#{ORG_NAME}/#{REPO_NAME}"
   end
