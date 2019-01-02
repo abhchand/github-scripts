@@ -77,9 +77,9 @@ GITHUB_OTP_SECRET=xxxx
 
 You can create a new `GITHUB_ACCESS_TOKEN` [here](https://github.com/settings/tokens).
 
-The `GITHUB_OTP_SECRET` (one-time password) auth token can be found in your `otpauth` URL provided
-github provides when you first set up 2FA. This is the URL that's presented as a QR
-code for you to scan with apps like Google Authenticator or 1Password.
+The `GITHUB_OTP_SECRET` (one-time password) auth token can be found in your `otpauth` URL that
+github provides when you first set up 2FA. (This is the URL that's presented as a QR
+code for you to scan with apps like Google Authenticator or 1Password.)
 
 ```
 otpauth://totp/GitHub:abhchand?secret=abcdefg&issuer=GitHub
