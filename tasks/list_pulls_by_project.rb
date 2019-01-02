@@ -13,6 +13,9 @@ class ListPullsByProject < ApiTask
     @project_ids = project_ids
     @opts = opts
 
+    @opts[:skip_columns] ||= []
+    @opts[:skip_columns].map!(&:downcase)
+
     setup_logger
     validate_environment
 
@@ -24,10 +27,15 @@ class ListPullsByProject < ApiTask
     projects = fetch_projects
 
     projects.each do |project|
-      str += "=== #{project['name']}\n"
+      str += "=== #{project['name']}\n\n"
       columns = fetch_columns_for(project)
 
       columns.each do |column|
+        if skip_column?(column)
+          logger.info("Skipping column #{column['name']}")
+          next
+        end
+
         str += "Column: #{column['name']}\n"
         cards = fetch_cards_in(column)
 
@@ -36,6 +44,8 @@ class ListPullsByProject < ApiTask
           str += "- #{issue['html_url']} (#{issue['title']})\n"
         end
       end
+
+      str += "\n"
     end
 
     puts str
@@ -89,5 +99,9 @@ class ListPullsByProject < ApiTask
 
     url = card["content_url"]
     get(url)&.first
+  end
+
+  def skip_column?(column)
+    @opts[:skip_columns].include?(column["name"].downcase)
   end
 end
