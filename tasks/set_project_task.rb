@@ -100,28 +100,4 @@ class SetProjectTask < HeadlessBrowserTask
       end
     end
   end
-
-  private
-
-  def check_for_chromedriver
-    logger.debug("Checking if `chromedriver` is available")
-
-    if `which chromedriver`.blank?
-      logger.fatal("Can not find `chromedriver`")
-      puts "Unable to find `chromedriver` in $PATH." +
-        "Install it with `brew install chromedriver`"
-      exit
-    end
-  end
-
-  def validate_environment
-    logger.debug("Checking if ENV variables are set")
-
-    if username.blank? || password.blank? || otp_secret.blank?
-      logger.fatal("Env not set correctly")
-      puts "Please set `GITHUB_USERNAME`, `GITHUB_PASSWORD`, and "\
-        "`GITHUB_OTP_SECRET`"
-      exit
-    end
-  end
 end

@@ -9,18 +9,13 @@
 # with Github. Provides helpers for logging in, access pull requests, etc...
 #
 
-require_relative "multi_channel_logger"
+require_relative "base_task"
 
-require "dotenv/load"
 require "rotp"
 require "selenium-webdriver"
 
-class HeadlessBrowserTask
-  attr_accessor :logger, :driver, :config
-
-  ROOT = File.expand_path("..", __dir__)
-  ORG_NAME = ENV["GITHUB_ORG_NAME"] || "callrail"
-  REPO_NAME = ENV["GITHUB_REPO_NAME"] || "callrail"
+class HeadlessBrowserTask < BaseTask
+  attr_accessor :driver, :config
 
   def initialize(opts = {})
     setup_driver
@@ -30,22 +25,6 @@ class HeadlessBrowserTask
   end
 
   private
-
-  def setup_logger
-    # TODO: Avoid using `caller` in the future
-    # We use it to get the name of the invoking class/file so we can
-    # use it in our logfile name
-    previous_file = caller.first.split(":").first
-
-    logfile = File.join(
-      ROOT,
-      "log",
-      File.basename(previous_file, File.extname(previous_file)) + ".log"
-    )
-
-    @logger = MultiChannelLogger.new([logfile, STDOUT], "monthly")
-    @logger.info("Logging to logfile: #{logfile}")
-  end
 
   def setup_driver
     logger.debug("Creating driver")
@@ -66,6 +45,28 @@ class HeadlessBrowserTask
     logger.info "Mapping is: #{@config}"
 
     @config
+  end
+
+  def check_for_chromedriver
+    logger.debug("Checking if `chromedriver` is available")
+
+    if `which chromedriver`.blank?
+      logger.fatal("Can not find `chromedriver`")
+      puts "Unable to find `chromedriver` in $PATH." +
+        "Install it with `brew install chromedriver`"
+      exit
+    end
+  end
+
+  def validate_environment
+    logger.debug("Checking if ENV variables are set")
+
+    if username.blank? || password.blank? || otp_secret.blank?
+      logger.fatal("Env not set correctly")
+      puts "Please set `GITHUB_USERNAME`, `GITHUB_PASSWORD`, and "\
+        "`GITHUB_OTP_SECRET`"
+      exit
+    end
   end
 
   def setup_headless_window
