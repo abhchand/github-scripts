@@ -17,7 +17,7 @@ class ApiTask < BaseTask
   BASE_URI = "https://api.github.com"
   HEADERS = {
     "User-Agent" => ENV["GITHUB_USERNAME"],
-    "Authorization" => "token 4bb95b8ebb06a162fac4c2355388721e129cfec3",
+    "Authorization" => "token #{ENV['GITHUB_ACCESS_TOKEN']}",
     "Accept" => "application/vnd.github.inertia-preview+json"
   }
 
