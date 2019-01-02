@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative "../tasks/list_pulls_by_project"
+require_relative "../tasks/list_project_issues_task"
 require "optparse"
 
 options = {}
@@ -36,4 +36,4 @@ parser = OptionParser.new do |opts|
 end
 
 parser.parse!
-ListPullsByProject.run!(project_ids, options)
+ListProjectIssuesTask.run!(project_ids, options)

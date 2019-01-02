@@ -3,7 +3,7 @@ require_relative "../shared/api_task"
 require "active_support"
 require "active_support/core_ext/object/blank.rb"
 
-class ListPullsByProject < ApiTask
+class ListProjectIssuesTask < ApiTask
 
   def self.run!(project_ids, opts = {})
     new(project_ids, opts).run!
