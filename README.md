@@ -15,14 +15,14 @@ Because the script needs to access Github using either your API token or your Gi
 In the root directory of this project, create an `.env` file with the following:
 
 ```
-GITHUB_API_TOKEN==xxxx
+GITHUB_ACCESS_TOKEN=xxxx
 
 GITHUB_USERNAME=xxxx
 GITHUB_PASSWORD=xxxx
 GITHUB_OTP_SECRET=xxxx
 ```
 
-You can create a new `GITHUB_API_TOKEN` [here](https://github.com/settings/tokens).
+You can create a new `GITHUB_ACCESS_TOKEN` [here](https://github.com/settings/tokens).
 
 The `GITHUB_OTP_SECRET` (one-time password) auth token can be found in your `otpauth` URL provided
 github provides when you first set up 2FA. This is the URL that's presented as a QR
