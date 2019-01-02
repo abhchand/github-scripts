@@ -34,6 +34,7 @@ class BaseTask
     )
 
     @logger = MultiChannelLogger.new([logfile, STDOUT], "monthly")
+    @logger.level = @opts[:verbose] ? :debug : :info
     @logger.info("Logging to logfile: #{logfile}")
   end
 end

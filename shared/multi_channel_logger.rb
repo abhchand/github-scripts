@@ -30,6 +30,10 @@ class MultiChannelLogger
     end
   end
 
+  def level=(level)
+    loggers.each { |logger| logger.level = level }
+  end
+
   def write(*args)
     loggers.each { |logger| logger.write(*args) }
   end
