@@ -15,7 +15,7 @@ Available Tasks:
 
 ## Tasks
 
-### <a name="task-set-project"></a> Set Project Task
+### <a name="task-set-project"></a> Set Project
 
 Automatically sets the "Project" on each Github PR to the appropriate team(s) based on the mapping of users to projects you specify.
 
