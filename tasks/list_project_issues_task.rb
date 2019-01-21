@@ -4,6 +4,13 @@ require "active_support"
 require "active_support/core_ext/object/blank.rb"
 
 class ListProjectIssuesTask < ApiTask
+  STATUS_TO_LABEL_MAPPING = {
+    "In Progress"       => ["WIP :construction:"],
+    "In Code Review"    => ["Code Review :mag:"],
+    "In QA Review"      => ["QA Review"],
+    "In Product Review" => ["Product Review"],
+    "Deployable"        => ["QA OK :+1:", "Product OK :+1"]
+  }
 
   def self.run!(project_ids, opts = {})
     new(project_ids, opts).run!
@@ -43,7 +50,9 @@ class ListProjectIssuesTask < ApiTask
           issue = fetch_issue_for(card)
           url = issue["html_url"]
           title = truncate(issue["title"], 45)
-          str += "- #{url} (#{title})\n"
+          state = state_for(issue)
+
+          str += "- #{url} (#{title}) (#{state})\n"
         end
       end
 
@@ -101,6 +110,18 @@ class ListProjectIssuesTask < ApiTask
 
     url = card["content_url"]
     get(url)&.first
+  end
+
+  def labels_for(issue)
+    (issue["labels"] || []).map { |l| l["name"] }
+  end
+
+  def state_for(issue)
+    labels = labels_for(issue)
+
+    STATUS_TO_LABEL_MAPPING.select do |state, whitelabels|
+      (whitelabels & labels).any?
+    end.keys.first
   end
 
   def skip_column?(column)
