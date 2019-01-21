@@ -30,11 +30,11 @@ class ListProjectIssuesTask < ApiTask
   end
 
   def run!
-    str = ""
+    data = {}
     projects = fetch_projects
 
     projects.each do |project|
-      str += "=== #{project['name']}\n"
+      data[project['name']] = {}
       columns = fetch_columns_for(project)
 
       columns.each do |column|
@@ -43,23 +43,20 @@ class ListProjectIssuesTask < ApiTask
           next
         end
 
-        str += "\nColumn: #{column['name']}\n"
         cards = fetch_cards_in(column)
 
         cards.each do |card|
           issue = fetch_issue_for(card)
-          url = issue["html_url"]
-          title = truncate(issue["title"], 45)
           state = state_for(issue)
 
-          str += "- #{url} (#{title}) (#{state})\n"
+          data[project['name']][state] ||= []
+          data[project['name']][state] <<
+            { url: issue["html_url"], title: truncate(issue["title"], 45) }
         end
       end
-
-      str += "\n"
     end
 
-    puts str
+    puts render_template_with(data)
   end
 
   private
@@ -122,6 +119,11 @@ class ListProjectIssuesTask < ApiTask
     STATUS_TO_LABEL_MAPPING.select do |state, whitelabels|
       (whitelabels & labels).any?
     end.keys.first
+  end
+
+  def render_template_with(data)
+    template = File.join(ROOT, "templates", "project-issues.erb")
+    ERB.new(File.read(template)).result(binding)
   end
 
   def skip_column?(column)
