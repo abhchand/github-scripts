@@ -5,11 +5,11 @@ require "active_support/core_ext/object/blank.rb"
 
 class ListProjectIssuesTask < ApiTask
   STATUS_TO_LABEL_MAPPING = {
-    "In Progress"       => ["WIP :construction:"],
-    "In Code Review"    => ["Code Review :mag:"],
-    "In QA Review"      => ["QA Review"],
-    "In Product Review" => ["Product Review"],
-    "Deployable"        => ["QA OK :+1:", "Product OK :+1"]
+    "In Development"            => ["WIP :construction:"],
+    "In Code Review"            => ["Code Review :mag:"],
+    "Ready for QA Review"       => ["QA Review"],
+    "Ready for Product Review"  => ["Product Review"],
+    "Ready for Deploy"          => ["QA OK :+1:", "Product OK :+1"]
   }
 
   def self.run!(project_ids, opts = {})
