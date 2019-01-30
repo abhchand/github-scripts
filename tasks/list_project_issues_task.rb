@@ -51,7 +51,10 @@ class ListProjectIssuesTask < ApiTask
 
           data[project['name']][state] ||= []
           data[project['name']][state] <<
-            { url: issue["html_url"], title: truncate(issue["title"], 45) }
+            {
+              url: issue["html_url"].gsub("https://", ""),
+              title: truncate(issue["title"], 45)
+            }
         end
       end
     end
