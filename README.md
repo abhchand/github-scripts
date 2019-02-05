@@ -13,7 +13,13 @@ Available Tasks:
 
 **NOTE:** Before running any of these tasks, you'll have to do a quick [one-time setup](#one-time-setup) below.
 
-## Tasks
+- [Tasks](#tasks)
+    - [Set Project](#task-set-project)
+    - [List Issues in Project](task-list-project-issues)
+- [One-Time Setup](#one-time-setup)
+
+
+## <a name="tasks"></a> Tasks
 
 ### <a name="task-set-project"></a> Set Project
 
