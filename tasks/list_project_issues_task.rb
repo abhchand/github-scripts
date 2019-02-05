@@ -33,7 +33,7 @@ class ListProjectIssuesTask < ApiTask
   def run!
     data = {}
     projects = fetch_projects
-    username_mapping = config["github_to_slack_username_mapping"]
+    username_mapping = config["github_to_slack_username_mapping"] || {}
 
     projects.each do |project|
       data[project['name']] = {}
