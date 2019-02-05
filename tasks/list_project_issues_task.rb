@@ -1,3 +1,13 @@
+# _________        .__  .__ __________        .__.__
+# \_   ___ \_____  |  | |  |\______   \_____  |__|  |
+# /    \  \/\__  \ |  | |  | |       _/\__  \ |  |  |
+# \     \____/ __ \|  |_|  |_|    |   \ / __ \|  |  |__
+#  \______  (____  /____/____/____|_  /(____  /__|____/
+#         \/     \/                 \/      \/
+#
+# Automatically sets the "Project" on each Github PR to the appropriate team(s)
+# based on the mapping of users to projects you specify.
+
 require_relative "../shared/api_task"
 
 require "active_support"
