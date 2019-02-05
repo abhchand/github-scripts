@@ -15,7 +15,7 @@ require "rotp"
 require "selenium-webdriver"
 
 class HeadlessBrowserTask < BaseTask
-  attr_accessor :driver, :config
+  attr_accessor :driver
 
   def initialize(opts = {})
     setup_driver
@@ -32,19 +32,6 @@ class HeadlessBrowserTask < BaseTask
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--headless')
     @driver = Selenium::WebDriver.for(:chrome, options: options)
-  end
-
-  def read_config
-    config_file = File.expand_path(@opts[:config_file], ROOT)
-
-    unless File.exist?(config_file)
-      raise "Could not find config file `#{config_file}`!"
-    end
-
-    @config = JSON.parse(File.read(config_file))
-    logger.info "Mapping is: #{@config}"
-
-    @config
   end
 
   def check_for_chromedriver

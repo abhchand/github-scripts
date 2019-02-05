@@ -13,11 +13,13 @@ require_relative "multi_channel_logger"
 require "dotenv/load"
 
 class BaseTask
-  attr_accessor :logger
+  attr_accessor :logger, :config
 
   ROOT = File.expand_path("..", __dir__)
   ORG_NAME = ENV["GITHUB_ORG_NAME"] || "callrail"
   REPO_NAME = ENV["GITHUB_REPO_NAME"] || "callrail"
+
+  DEFAULT_CONFIG_FILE = File.join(ROOT, "config.json")
 
   private
 
@@ -52,5 +54,18 @@ class BaseTask
     @logger = MultiChannelLogger.new([logfile, STDOUT], "monthly")
     @logger.level = @opts[:verbose] ? :debug : :info
     @logger.info("Logging to logfile: #{logfile}")
+  end
+
+  def read_config
+    config_file = File.expand_path(@opts[:config_file], ROOT)
+
+    unless File.exist?(config_file)
+      raise "Could not find config file `#{config_file}`!"
+    end
+
+    @config = JSON.parse(File.read(config_file))
+    logger.info "Mapping is: #{@config}"
+
+    @config
   end
 end
