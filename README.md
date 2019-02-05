@@ -50,15 +50,26 @@ Lists all issues in a project. Convenient format to copy-paste into Slack.
   <img src="meta/project-board.png" height="175" />
 </p>
 
+Create a config file mapping github usernames to slack usernames (Optional)
+
+```json
+{
+  "github_to_slack_username_mapping": {
+    "abhchand": "Abhishek",
+    "mattRyan": "Matty Ice",
+  }
+}
+
+```
 
 Run
 
 ```
 bundle install
-bin/list-project-issues-task --project-ids=6,9
+bin/list-project-issues-task --project-ids=6,9 --config-file config.json
 
 # Skip certain columns in your Projects
-bin/list-project-issues-task --project-ids=6,9 --skip-columns="Shipped","Code Review"
+bin/list-project-issues-task --project-ids=6,9 --config-file config.json --skip-columns="Shipped","Code Review"
 ```
 
 ## <a name="one-time-setup"></a> One-Time Setup
