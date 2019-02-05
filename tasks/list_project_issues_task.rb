@@ -24,6 +24,7 @@ class ListProjectIssuesTask < ApiTask
     @opts[:skip_columns].map!(&:downcase)
 
     setup_logger
+    read_config
     validate_environment
 
     super(opts)
@@ -32,6 +33,7 @@ class ListProjectIssuesTask < ApiTask
   def run!
     data = {}
     projects = fetch_projects
+    username_mapping = config["github_to_slack_username_mapping"]
 
     projects.each do |project|
       data[project['name']] = {}
@@ -48,12 +50,14 @@ class ListProjectIssuesTask < ApiTask
         cards.each do |card|
           issue = fetch_issue_for(card)
           state = state_for(issue)
+          github_username = issue["user"]["login"]
 
           data[project['name']][state] ||= []
           data[project['name']][state] <<
             {
               url: issue["html_url"].gsub("https://", ""),
-              title: truncate(issue["title"], 45)
+              title: truncate(issue["title"], 45),
+              slack_username: username_mapping[github_username]
             }
         end
       end

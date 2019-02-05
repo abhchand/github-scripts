@@ -64,8 +64,6 @@ require "active_support/core_ext/object/blank.rb"
 class SetProjectTask < HeadlessBrowserTask
   include GithubProjectsHelpers
 
-  DEFAULT_CONFIG_FILE = File.join(ROOT, "config.json")
-
   def self.run!(opts = {})
     new(opts).run!
   end

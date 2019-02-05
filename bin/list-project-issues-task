@@ -17,6 +17,15 @@ parser = OptionParser.new do |opts|
     project_ids = p.split(",").map(&:to_i)
   end
 
+  options[:config_file] = BaseTask::DEFAULT_CONFIG_FILE
+  opts.on(
+    "-cCONFIGFILE",
+    "--config-file=cCONFIGFILE",
+    "Config File to use (default: #{options[:config_file]})"
+  ) do |c|
+    options[:config_file] = c
+  end
+
   opts.on(
     "-sSKIP_COLUMNS",
     "--skip-columns=Col1,Col2,...",
