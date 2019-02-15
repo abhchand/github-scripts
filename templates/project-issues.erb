@@ -2,7 +2,7 @@
 === <%= project_name %>
 Sprint Day *X* of 10
 <% states.each do |state, issues| %>
-<%= state || "Unknown" %>:
+*<%= state || "Unknown" %>*:
 <% issues.each do |issue| %>
 - <%= issue[:url] %> (<%= issue[:title] %>) <%= "(@#{issue[:slack_username]})" if issue[:slack_username] %><% end %>
 <% end %>
