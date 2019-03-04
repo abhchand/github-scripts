@@ -10,9 +10,6 @@
 require_relative "../shared/headless_browser_task"
 require_relative "../shared/github_projects_helpers"
 
-require "active_support"
-require "active_support/core_ext/object/blank.rb"
-
 class SetProjectTask < HeadlessBrowserTask
   include GithubProjectsHelpers
 
@@ -29,7 +26,7 @@ class SetProjectTask < HeadlessBrowserTask
     check_for_chromedriver
     validate_environment
 
-    super
+    super()
   end
 
   def run!

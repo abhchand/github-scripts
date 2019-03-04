@@ -10,9 +10,6 @@
 
 require_relative "../shared/api_task"
 
-require "active_support"
-require "active_support/core_ext/object/blank.rb"
-
 class ListProjectIssuesTask < ApiTask
   STATUS_TO_LABEL_MAPPING = {
     "In Development"            => ["WIP :construction:"],
@@ -37,7 +34,7 @@ class ListProjectIssuesTask < ApiTask
     read_config
     validate_environment
 
-    super(opts)
+    super()
   end
 
   def run!
@@ -61,18 +58,21 @@ class ListProjectIssuesTask < ApiTask
           issue = fetch_issue_for(card)
           state = state_for(issue)
           github_username = issue["user"]["login"]
+          days = days_since(issue["created_at"])
 
           data[project['name']][state] ||= []
           data[project['name']][state] <<
             {
               url: issue["html_url"].gsub("https://", ""),
               title: truncate(issue["title"], 45),
-              slack_username: username_mapping[github_username]
+              slack_username: username_mapping[github_username],
+              days: (days if days > 2)
             }
         end
       end
     end
 
+    sort_by_created_at!(data)
     puts render_template_with(data)
   end
 
@@ -138,9 +138,37 @@ class ListProjectIssuesTask < ApiTask
     end.keys.first
   end
 
+  def sort_by_created_at!(data)
+    data.each do |project, states|
+      states.each do |state, issues|
+        issues.sort! do |issue_a, issue_b|
+          # Github URLs get assigned by creation date, so just sort directly
+          # on the URL
+          issue_a[:url] <=> issue_b[:url]
+        end
+      end
+    end
+  end
+
   def render_template_with(data)
     template = File.join(ROOT, "templates", "project-issues.erb")
     ERB.new(File.read(template)).result(binding)
+  end
+
+  def days_since(time)
+    # Convert times to local user specified TZ
+    # Assumes `time` is always in UTC
+    created = Time.zone.parse(time).in_time_zone(tz)
+    now     = Time.zone.now.in_time_zone(tz)
+
+    # Calculate range:
+    # Anything after 3 PM local (i.e. 9 hours remaining in day) gets rounded to
+    # next day
+    start_date = (created + 9.hours).beginning_of_day.to_date
+    end_date   = (now + 9.hours).beginning_of_day.to_date
+
+    # Count days, ignornig weekends
+    (start_date..end_date).select { |d| (1..5).include?(d.wday) }.size
   end
 
   def skip_column?(column)

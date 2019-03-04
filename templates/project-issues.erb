@@ -4,7 +4,7 @@ Sprint Day *X* of 10
 <% states.each do |state, issues| %>
 *<%= state || "Unknown" %>*:
 <% issues.each do |issue| %>
-- <%= issue[:url] %> (<%= issue[:title] %>) <%= "(@#{issue[:slack_username]})" if issue[:slack_username] %><% end %>
+- <%= issue[:url] %> (<%= issue[:title] %>)<%= " (#{issue[:days]} days)" if issue[:days] %><%= " (@#{issue[:slack_username]})" if issue[:slack_username] %><% end %>
 <% end %>
 Stories >= 3pt in Buildable:
 <% end %>

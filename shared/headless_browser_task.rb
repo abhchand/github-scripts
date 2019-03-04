@@ -17,7 +17,7 @@ require "selenium-webdriver"
 class HeadlessBrowserTask < BaseTask
   attr_accessor :driver
 
-  def initialize(opts = {})
+  def initialize
     setup_driver
     setup_headless_window
 
@@ -54,6 +54,8 @@ class HeadlessBrowserTask < BaseTask
         "`GITHUB_OTP_SECRET`"
       exit
     end
+
+    super
   end
 
   def setup_headless_window

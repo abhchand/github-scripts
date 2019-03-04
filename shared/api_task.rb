@@ -26,10 +26,6 @@ class ApiTask < BaseTask
   base_uri BASE_URI
   headers HEADERS
 
-  def initialize(opts = {})
-    # empty
-  end
-
   private
 
   def validate_environment
@@ -40,6 +36,8 @@ class ApiTask < BaseTask
       puts "Please set `GITHUB_ACCESS_TOKEN` and `GITHUB_USERNAME`"
       exit
     end
+
+    super
   end
 
   def get(path, opts = {})

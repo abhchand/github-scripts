@@ -17,6 +17,7 @@ Available Tasks:
     - [Set Project](#task-set-project)
     - [List Issues in Project](task-list-project-issues)
 - [One-Time Setup](#one-time-setup)
+- [Sample Config File](#sample-config)
 
 
 ## <a name="tasks"></a> Tasks
@@ -107,3 +108,23 @@ Here you would set `GITHUB_OTP_SECRET=abcdefg`.
 If you use 1Password to store your 2FA logins you can easily retrieve this URL.
 Otherwise you might have to disable and then re-enable your 2FA on Github
 to get a new QR code and then decode that QR code yourself to get the URL ¯\\_(ツ)_/¯.
+
+## <a name="sample-config"></a> Sample Config File
+
+```yml
+{
+  // Must be a TZ recognized by ActiveSupport::TimeWithZone::MAPPING
+  // https://api.rubyonrails.org/classes/ActiveSupport/TimeZone.html
+  "tz": "Eastern Time (US & Canada)",
+
+  "project_to_users_mapping": {
+    "Billing Team Project": ["abhchand", "mattRyan"],
+    "Some Other Project": ["mattRyan"]
+  },
+
+  "github_to_slack_username_mapping": {
+    "abhchand": "Abhishek",
+    "mattRyan": "Matty Ice",
+  }
+}
+```

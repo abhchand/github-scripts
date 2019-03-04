@@ -11,6 +11,10 @@
 require_relative "multi_channel_logger"
 
 require "dotenv/load"
+require "active_support"
+require "active_support/core_ext/object/blank.rb"
+require "active_support/core_ext/time/zones"
+require "active_support/core_ext/numeric/time"
 
 class BaseTask
   attr_accessor :logger, :config
@@ -20,6 +24,10 @@ class BaseTask
   REPO_NAME = ENV["GITHUB_REPO_NAME"] || "callrail"
 
   DEFAULT_CONFIG_FILE = File.join(ROOT, "config.json")
+
+  def initialize
+    Time.zone = "UTC"
+  end
 
   private
 
@@ -37,6 +45,10 @@ class BaseTask
 
   def otp_secret
     @otp_secret ||= ENV["GITHUB_OTP_SECRET"]
+  end
+
+  def tz
+    @tz ||= config["tz"].present? ? config["tz"] : "UTC"
   end
 
   def setup_logger
@@ -67,5 +79,13 @@ class BaseTask
     logger.info "Mapping is: #{@config}"
 
     @config
+  end
+
+  def validate_environment
+    unless ActiveSupport::TimeZone::MAPPING.has_key?(tz)
+      logger.fatal("Invalid timezone `#{tz}`")
+      puts "Invalid timezone `#{tz}`"
+      exit
+    end
   end
 end
