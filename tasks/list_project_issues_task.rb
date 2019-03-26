@@ -13,10 +13,10 @@ require_relative "../shared/api_task"
 class ListProjectIssuesTask < ApiTask
   STATUS_TO_LABEL_MAPPING = {
     "In Development"            => ["WIP :construction:"],
-    "In Code Review"            => ["Code Review :mag:"],
-    "Ready for QA Review"       => ["QA Review"],
+    "In Code Review"            => ["Code Review :mag:", ":eyes: Code Review"],
+    "Ready for QA Review"       => ["QA Review", ":hammer: QA Review"],
     "Ready for Product Review"  => ["Product Review"],
-    "Ready for Deploy"          => ["QA OK :+1:", "Product OK :+1"]
+    "Ready for Deploy"          => ["QA OK :+1:", ":white_check_mark: QA Ok", "Product OK :+1"]
   }
 
   def self.run!(project_ids, opts = {})
