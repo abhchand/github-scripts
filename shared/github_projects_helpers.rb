@@ -13,7 +13,7 @@ module GithubProjectsHelpers
     mapping = config["project_to_users_mapping"]
 
     mapping.each_key do |project|
-      projects << project if mapping[project].include?(author)
+      projects << project if mapping[project].map(&:downcase).include?(author)
     end
 
     projects.uniq

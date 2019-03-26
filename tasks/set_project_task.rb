@@ -32,9 +32,11 @@ class SetProjectTask < HeadlessBrowserTask
   def run!
     run_and_close_driver do
       log_in_to_github
-      author_whitelist = config["project_to_users_mapping"].values.flatten.uniq
+      author_whitelist =
+        config["project_to_users_mapping"].values.flatten.uniq.map(&:downcase)
 
       each_pull_request do |url, author|
+        author = author.downcase
         next unless author_whitelist.include?(author)
 
         logger.debug "Analyzing PR: ##{url.split('/').last} (#{author})"
