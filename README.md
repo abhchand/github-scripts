@@ -57,13 +57,30 @@ Lists all issues in a project. Convenient format to copy-paste into Slack.
   <img src="meta/project-board.png" height="175" />
 </p>
 
-Create a config file mapping github usernames to slack usernames (Optional)
+Create a config file mapping github usernames to slack usernames (Optional) and each column states to an owner
 
 ```json
 {
   "github_to_slack_username_mapping": {
     "abhchand": "Abhishek",
     "mattRyan": "Matty Ice",
+  },
+
+  "state_to_slack_owner_mapping": {
+    "Billing Team Project": {
+      "In Development": null,
+      "In Code Review": null,
+      "Ready for QA Review": "Abhishek",
+      "Ready for Product Review": "Matty Ice",
+      "Ready for Deploy": "Simone Biles"
+    },
+    "Conversation Intelligence": {
+      "In Development": null,
+      "In Code Review": null,
+      "Ready for QA Review": "SerenaWilliams",
+      "Ready for Product Review": null,
+      "Ready for Deploy": null
+    }
   }
 }
 
@@ -125,6 +142,23 @@ to get a new QR code and then decode that QR code yourself to get the URL ¯\\_(
   "github_to_slack_username_mapping": {
     "abhchand": "Abhishek",
     "mattRyan": "Matty Ice",
+  },
+
+  "state_to_slack_owner_mapping": {
+    "Billing Team Project": {
+      "In Development": null,
+      "In Code Review": null,
+      "Ready for QA Review": "Abhishek",
+      "Ready for Product Review": "Matty Ice",
+      "Ready for Deploy": "Simone Biles"
+    },
+    "Conversation Intelligence": {
+      "In Development": null,
+      "In Code Review": null,
+      "Ready for QA Review": "SerenaWilliams",
+      "Ready for Product Review": null,
+      "Ready for Deploy": null
+    }
   }
 }
 ```
