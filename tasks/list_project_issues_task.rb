@@ -11,7 +11,7 @@
 require_relative "../shared/api_task"
 
 class ListProjectIssuesTask < ApiTask
-  STATUS_TO_LABEL_MAPPING = {
+  STATE_TO_LABEL_MAPPING = {
     "In Development"            => ["WIP :construction:"],
     "In Code Review"            => ["Code Review :mag:", ":eyes: Code Review"],
     "Ready for QA Review"       => ["QA Review", ":hammer: QA Review"],
@@ -133,7 +133,7 @@ class ListProjectIssuesTask < ApiTask
   def state_for(issue)
     labels = labels_for(issue)
 
-    STATUS_TO_LABEL_MAPPING.select do |state, whitelabels|
+    STATE_TO_LABEL_MAPPING.select do |state, whitelabels|
       (whitelabels & labels).any?
     end.keys.first
   end
