@@ -171,7 +171,10 @@ class ListProjectIssuesTask < ApiTask
 
   def render_template_with(data)
     template = File.join(ROOT, "templates", "project-issues.erb")
-    ERB.new(File.read(template)).result(binding)
+
+    ERB.new(File.read(template)).result(binding).tap do |output|
+      output.gsub!("\n\n", "\n")
+    end
   end
 
   def days_since(time)
