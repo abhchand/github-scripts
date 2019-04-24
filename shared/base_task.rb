@@ -51,13 +51,13 @@ class BaseTask
   end
 
   def github_org
-    return unless defined?(@opts)
-    @opts[:github_org] || DEFAULT_GITHUB_ORG
+    return DEFAULT_GITHUB_ORG.downcase unless defined?(@opts)
+    (@opts[:github_org] || DEFAULT_GITHUB_ORG).downcase
   end
 
   def github_repo
-    return unless defined?(@opts)
-    @opts[:github_repo] || DEFAULT_GITHUB_REPO
+    return DEFAULT_GITHUB_REPO.downcase unless defined?(@opts)
+    (@opts[:github_repo] || DEFAULT_GITHUB_REPO).downcase
   end
 
   def tz
