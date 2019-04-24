@@ -20,7 +20,7 @@ parser = OptionParser.new do |opts|
   options[:config_file] = BaseTask::DEFAULT_CONFIG_FILE
   opts.on(
     "-cCONFIGFILE",
-    "--config-file=cCONFIGFILE",
+    "--config-file=CONFIGFILE",
     "Config File to use (default: #{options[:config_file]})"
   ) do |c|
     options[:config_file] = c

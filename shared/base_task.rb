@@ -26,7 +26,7 @@ class BaseTask
   DEFAULT_GITHUB_ORG = "callrail".freeze
   DEFAULT_GITHUB_REPO = "callrail".freeze
 
-  DEFAULT_CONFIG_FILE = File.join(ROOT, "config.yml")
+  DEFAULT_CONFIG_FILE = "config.yml".freeze
 
   def initialize
     Time.zone = "UTC"
