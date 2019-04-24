@@ -20,8 +20,6 @@ class HeadlessBrowserTask < BaseTask
   def initialize
     setup_driver
     setup_headless_window
-
-    logger.info("Looking at Github repository: #{repo_url}")
   end
 
   private

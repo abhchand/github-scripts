@@ -83,7 +83,7 @@ class ListProjectIssuesTask < ApiTask
 
   def fetch_projects
     # Documentation: https://developer.github.com/v3/projects
-    logger.info("Fetching projects")
+    logger.info("Fetching info for project id(s): #{@project_ids.join(', ')}")
 
     path = ["/repos", github_org, github_repo, "projects"].join("/")
     response = get(path)
@@ -103,7 +103,7 @@ class ListProjectIssuesTask < ApiTask
 
   def fetch_cards_in(column)
     # Documentation: https://developer.github.com/v3/projects/cards
-    logger.info(
+    logger.debug(
       "Fetching cards for column ##{column['id']} '#{column['name']}'"
     )
 
@@ -113,7 +113,7 @@ class ListProjectIssuesTask < ApiTask
 
   def fetch_issue_for(card)
     # Documentation: https://developer.github.com/v3/issues
-    logger.info("Fetching issue for card ##{card['id']}")
+    logger.debug("Fetching issue for card ##{card['id']}")
 
     url = card["content_url"]
     get(url)&.first

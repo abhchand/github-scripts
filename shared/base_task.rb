@@ -109,6 +109,9 @@ class BaseTask
     @logger = MultiChannelLogger.new([logfile, STDOUT], "monthly")
     @logger.level = @opts[:verbose] ? :debug : :info
     @logger.info("Logging to logfile: #{logfile}")
+
+    # This isn't really the place for logging this but I'm lazy
+    @logger.info("Target repository: github.com/#{github_org}/#{github_repo}")
   end
 
   def read_config
@@ -119,7 +122,7 @@ class BaseTask
     end
 
     @config = YAML.load(File.read(config_file))
-    logger.info "Mapping is: #{@config}"
+    logger.debug "Mapping is: #{@config}"
 
     @config
   end
