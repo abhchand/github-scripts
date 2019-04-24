@@ -1,10 +1,10 @@
 <% data.each do |project_name, states| %>
 === <%= project_name %>
 Sprint Day *X* of 10
-<% states.each do |state, issues| %>
-<% owner = config.dig("state_to_slack_owner_mapping", project_name, state) %>
-*<%= state || "Unknown" %>*: <%= "(@#{owner})" if owner %>
-<% issues.each do |issue| %>
+<% states.each do |state, state_data| %>
+<% owner = state_data[:owner] %>
+*<%= state_data[:display_name] || "Unknown" %>*: <%= "(@#{owner})" if owner %>
+<% state_data[:issues].each do |issue| %>
 - <%= issue[:url] %> (<%= issue[:title] %>)<%= " (#{issue[:days]} days)" if issue[:days] %><%= " (@#{issue[:slack_username]})" if issue[:slack_username] %><% end %>
 <% end %>
 *Stories >= 3pt in Buildable*:

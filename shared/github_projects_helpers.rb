@@ -8,12 +8,12 @@ module GithubProjectsHelpers
       .detect { |f| f.text =~ /Projects\n/ }
   end
 
-  def expected_projects_for(author)
+  def expected_projects_for(github_author)
     projects = []
-    mapping = config["project_to_users_mapping"]
 
-    mapping.each_key do |project|
-      projects << project if mapping[project].map(&:downcase).include?(author)
+    config["projects"].each do |project, config|
+      members = config["members"]
+      projects << project if to_github_users(members).include?(github_author)
     end
 
     projects.uniq

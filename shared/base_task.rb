@@ -16,6 +16,8 @@ require "active_support/core_ext/object/blank.rb"
 require "active_support/core_ext/time/zones"
 require "active_support/core_ext/numeric/time"
 
+require "yaml"
+
 class BaseTask
   attr_accessor :logger, :config
 
@@ -23,7 +25,7 @@ class BaseTask
   ORG_NAME = ENV["GITHUB_ORG_NAME"] || "callrail"
   REPO_NAME = ENV["GITHUB_REPO_NAME"] || "callrail"
 
-  DEFAULT_CONFIG_FILE = File.join(ROOT, "config.json")
+  DEFAULT_CONFIG_FILE = File.join(ROOT, "config.yml")
 
   def initialize
     Time.zone = "UTC"
@@ -51,6 +53,36 @@ class BaseTask
     @tz ||= config["tz"].present? ? config["tz"] : "UTC"
   end
 
+  def people
+    return @people if @people
+
+    @people = {}
+
+    # Ensure all keys are stored `downcase` to make searches case-insensitive
+    config["people"].each do |name, mapping|
+      @people[name.downcase] = {
+        "github" => mapping["github"].downcase,
+        "slack" => mapping["slack"].downcase
+      }
+    end
+  end
+
+  def to_github_users(people_list)
+    people_list.map { |name| people[name.downcase]["github"] }
+  end
+
+  def to_slack_user(person)
+    people[person.downcase]["slack"]
+  end
+
+  def find_slack_by_github(github_name)
+    people.each do |person, mapping|
+      if mapping["github"].downcase == github_name.downcase
+        return mapping["slack"]
+      end
+    end
+  end
+
   def setup_logger
     # TODO: Avoid using `caller` in the future
     # We use it to get the name of the invoking class/file so we can
@@ -75,7 +107,7 @@ class BaseTask
       raise "Could not find config file `#{config_file}`!"
     end
 
-    @config = JSON.parse(File.read(config_file))
+    @config = YAML.load(File.read(config_file))
     logger.info "Mapping is: #{@config}"
 
     @config

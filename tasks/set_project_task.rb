@@ -32,17 +32,18 @@ class SetProjectTask < HeadlessBrowserTask
   def run!
     run_and_close_driver do
       log_in_to_github
-      author_whitelist =
-        config["project_to_users_mapping"].values.flatten.uniq.map(&:downcase)
 
-      each_pull_request do |url, author|
-        author = author.downcase
-        next unless author_whitelist.include?(author)
+      members = config["projects"].values.map { |i| i["members"] }
+      github_author_whitelist = to_github_users(members.flatten.uniq)
 
-        logger.debug "Analyzing PR: ##{url.split('/').last} (#{author})"
+      each_pull_request do |url, github_author|
+        github_author = github_author.downcase
+        next unless github_author_whitelist.include?(github_author)
+
+        logger.debug "Analyzing PR: ##{url.split('/').last} (#{github_author})"
         visit(url, log: false)
 
-        projects = expected_projects_for(author) - current_projects
+        projects = expected_projects_for(github_author) - current_projects
         logger.debug "  - Adding: #{projects}" if projects.any?
 
         projects.each { |project| toggle_project(project) }

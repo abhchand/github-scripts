@@ -1,0 +1,75 @@
+
+  # Must be a TZ recognized by ActiveSupport::TimeWithZone::MAPPING
+  # https://api.rubyonrails.org/classes/ActiveSupport/TimeZone.html
+  tz: "Eastern Time (US & Canada)"
+
+  #
+  # Define a list of people.
+  # Use the same name to refer to people in the configs below
+  #
+  people:
+    abhishek:
+      github: abhchand
+      slack: abhishek
+    matty:
+      github: matty
+      slack: Matty Ice
+    serena:
+      github: swilliams
+      slack: Serena Williams
+
+  #
+  # Define a list of states and one ore more github labels they
+  # correspond to.
+  #
+
+  states:
+    development:
+      display_name: In Development
+      labels:
+        - "WIP :construction:"
+    code_review:
+      display_name: In Code Review
+      labels:
+        - "Code Review :mag:"
+        - ":eyes: Code Review"
+    qa_review:
+      display_name: Ready for QA Review
+      labels:
+        - "QA Review"
+        - ":hammer: QA Review"
+    product_review:
+      display_name: Ready for Product Review
+      labels:
+        - "Product Review"
+    ready_to_ship:
+      display_name:  Ready for Deploy
+      labels:
+        - "QA OK :+1:"
+        - ":white_check_mark: QA Ok"
+        - "Product OK :+1"
+
+  #
+  # Define a list of projects. Each project should correspond to an actual Github
+  # Project board!
+  #
+  projects:
+    "Billing Team Project":
+      members:
+        - abhishek
+        - matty
+      # You can optionally assign owners or responsible party
+      # for each state defined above.
+      state_owners:
+        qa_review: serena
+        product_review: abhishek
+        ready_to_ship: abhishek
+
+    "Reporting Team Project":
+      members:
+        - matty
+        - serena
+      state_owners:
+        qa_review: abhishek
+
+

@@ -11,14 +11,6 @@
 require_relative "../shared/api_task"
 
 class ListProjectIssuesTask < ApiTask
-  STATE_TO_LABEL_MAPPING = {
-    "In Development"            => ["WIP :construction:"],
-    "In Code Review"            => ["Code Review :mag:", ":eyes: Code Review"],
-    "Ready for QA Review"       => ["QA Review", ":hammer: QA Review"],
-    "Ready for Product Review"  => ["Product Review"],
-    "Ready for Deploy"          => ["QA OK :+1:", ":white_check_mark: QA Ok", "Product OK :+1"]
-  }
-
   def self.run!(project_ids, opts = {})
     new(project_ids, opts).run!
   end
@@ -40,7 +32,6 @@ class ListProjectIssuesTask < ApiTask
   def run!
     data = {}
     projects = fetch_projects
-    username_mapping = config["github_to_slack_username_mapping"] || {}
 
     projects.each do |project|
       data[project['name']] = {}
@@ -60,12 +51,13 @@ class ListProjectIssuesTask < ApiTask
           github_username = issue["user"]["login"]
           days = days_since(issue["created_at"])
 
-          data[project['name']][state] ||= []
-          data[project['name']][state] <<
+          data[project['name']][state] ||= {}
+          data[project['name']][state][:issues] ||= []
+          data[project['name']][state][:issues] <<
             {
               url: issue["html_url"].gsub("https://", ""),
               title: truncate(issue["title"], 45),
-              slack_username: username_mapping[github_username],
+              slack_username: find_slack_by_github(github_username),
               days: (days if days > 2)
             }
         end
@@ -73,6 +65,7 @@ class ListProjectIssuesTask < ApiTask
     end
 
     sort_by_created_at!(data)
+    add_state_data!(data)
     puts render_template_with(data)
   end
 
@@ -126,6 +119,20 @@ class ListProjectIssuesTask < ApiTask
     get(url)&.first
   end
 
+  def state_name_to_label_mapping
+    @state_name_to_label_mapping ||= begin
+      mapping = {}
+
+      config["states"].each do |state_name, state_cfg|
+        key = state_name
+        val = state_cfg["labels"]
+        mapping[key] = val
+      end
+
+      mapping
+    end
+  end
+
   def labels_for(issue)
     (issue["labels"] || []).map { |l| l["name"] }
   end
@@ -133,19 +140,31 @@ class ListProjectIssuesTask < ApiTask
   def state_for(issue)
     labels = labels_for(issue)
 
-    STATE_TO_LABEL_MAPPING.select do |state, whitelabels|
+    state_name_to_label_mapping.select do |_state_name, whitelabels|
       (whitelabels & labels).any?
     end.keys.first
   end
 
   def sort_by_created_at!(data)
     data.each do |project, states|
-      states.each do |state, issues|
-        issues.sort! do |issue_a, issue_b|
+      states.each do |state, state_data|
+        state_data[:issues].sort! do |issue_a, issue_b|
           # Github URLs get assigned by creation date, so just sort directly
           # on the URL
           issue_a[:url] <=> issue_b[:url]
         end
+      end
+    end
+  end
+
+  def add_state_data!(data)
+    data.each do |project, states|
+      states.each do |state, state_data|
+        owner = config["projects"][project]["state_owners"][state]
+        display_name = config.dig("states", state, "display_name")
+
+        state_data[:display_name] = display_name
+        state_data[:owner] = to_slack_user(owner) if owner
       end
     end
   end
