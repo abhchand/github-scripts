@@ -22,8 +22,9 @@ class BaseTask
   attr_accessor :logger, :config
 
   ROOT = File.expand_path("..", __dir__)
-  ORG_NAME = ENV["GITHUB_ORG_NAME"] || "callrail"
-  REPO_NAME = ENV["GITHUB_REPO_NAME"] || "callrail"
+
+  DEFAULT_GITHUB_ORG = "callrail".freeze
+  DEFAULT_GITHUB_REPO = "callrail".freeze
 
   DEFAULT_CONFIG_FILE = File.join(ROOT, "config.yml")
 
@@ -47,6 +48,16 @@ class BaseTask
 
   def otp_secret
     @otp_secret ||= ENV["GITHUB_OTP_SECRET"]
+  end
+
+  def github_org
+    return unless defined?(@opts)
+    @opts[:github_org] || DEFAULT_GITHUB_ORG
+  end
+
+  def github_repo
+    return unless defined?(@opts)
+    @opts[:github_repo] || DEFAULT_GITHUB_REPO
   end
 
   def tz

@@ -34,6 +34,24 @@ parser = OptionParser.new do |opts|
     options[:skip_columns] = s.split(",")
   end
 
+  options[:github_org] = BaseTask::DEFAULT_GITHUB_ORG
+  opts.on(
+    "-oGITHUB_ORG",
+    "--github-org=GITHUB_ORG",
+    "Github organization for the project (default: '#{options[:github_org]}')"
+  ) do |o|
+    options[:github_org] = o
+  end
+
+  options[:github_repo] = BaseTask::DEFAULT_GITHUB_REPO
+  opts.on(
+    "-rGITHUB_REPO",
+    "--github-repo=GITHUB_REPO",
+    "Github repository for the project (default: '#{options[:github_repo]}')"
+  ) do |r|
+    options[:github_repo] = r
+  end
+
   opts.on("-v", "--verbose", "Enable verbose output") do
     options[:verbose] = true
   end

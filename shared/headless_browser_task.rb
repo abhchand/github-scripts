@@ -119,7 +119,7 @@ class HeadlessBrowserTask < BaseTask
   end
 
   def repo_url
-    "https://github.com/#{ORG_NAME}/#{REPO_NAME}"
+    "https://github.com/#{github_org}/#{github_repo}"
   end
 
   def pulls_url(page: nil)

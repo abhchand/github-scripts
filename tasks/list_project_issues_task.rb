@@ -85,7 +85,7 @@ class ListProjectIssuesTask < ApiTask
     # Documentation: https://developer.github.com/v3/projects
     logger.info("Fetching projects")
 
-    path = ["/repos", ORG_NAME, REPO_NAME, "projects"].join("/")
+    path = ["/repos", github_org, github_repo, "projects"].join("/")
     response = get(path)
 
     response.select { |project| @project_ids.include?(project["number"]) }
