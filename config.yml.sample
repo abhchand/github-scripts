@@ -50,26 +50,28 @@
         - "Product OK :+1"
 
   #
-  # Define a list of projects. Each project should correspond to an actual Github
-  # Project board!
+  # Define a list of projects. Each project key should correspond to an actual Github
+  # Project board ID!
   #
   projects:
-    "Billing Team Project":
-      members:
-        - abhishek
-        - matty
-      # You can optionally assign owners or responsible party
-      # for each state defined above.
-      state_owners:
-        qa_review: serena
-        product_review: abhishek
-        ready_to_ship: abhishek
+    callrail:
+      callrail:
+        4:
+          # Required: Define which people are associated with this project
+          members:
+            - abhishek
+            - matty
+          # Optional. Assign owners or responsible party
+          # for each state defined above.
+          state_owners:
+            qa_review: serena
+            product_review: abhishek
+            ready_to_ship: abhishek
 
-    "Reporting Team Project":
-      members:
-        - matty
-        - serena
-      state_owners:
-        qa_review: abhishek
-
-
+      swappy:
+        2:
+          members:
+            - matty
+            - serena
+          state_owners:
+            qa_review: abhishek

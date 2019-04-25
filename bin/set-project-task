@@ -8,6 +8,14 @@ options = {}
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: bin/#{__FILE__} [options]"
 
+  opts.on(
+    "-pPROJECTIDS",
+    "--project-ids=P1,P2,...",
+    "Run only against a subset of Project IDs (e.g. \"5,7\")."
+  ) do |p|
+    options[:project_ids] = p.split(",").map(&:to_i)
+  end
+
   options[:config_file] = BaseTask::DEFAULT_CONFIG_FILE
   opts.on(
     "-cCONFIGFILE",

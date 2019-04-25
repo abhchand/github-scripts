@@ -78,6 +78,15 @@ class BaseTask
     end
   end
 
+  def projects
+    @projects ||= begin
+      projects = config.dig("projects", github_org, github_repo) || {}
+      project_ids = @opts[:project_ids] || projects.keys
+
+      projects.select { |id, project_data| project_ids.include?(id) }
+    end
+  end
+
   def to_github_users(people_list)
     people_list.map { |name| people[name.downcase]["github"] }
   end

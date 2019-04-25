@@ -11,12 +11,11 @@
 require_relative "../shared/api_task"
 
 class ListProjectIssuesTask < ApiTask
-  def self.run!(project_ids, opts = {})
-    new(project_ids, opts).run!
+  def self.run!(opts = {})
+    new(opts).run!
   end
 
-  def initialize(project_ids, opts = {})
-    @project_ids = project_ids
+  def initialize(opts = {})
     @opts = opts
 
     @opts[:skip_columns] ||= []
@@ -31,10 +30,11 @@ class ListProjectIssuesTask < ApiTask
 
   def run!
     data = {}
-    projects = fetch_projects
 
-    projects.each do |project|
-      data[project['name']] = {}
+    logger.info("Target project ids: #{projects.keys.join(', ')}")
+
+    fetch_projects.each do |project|
+      project_id = project["number"]
       columns = fetch_columns_for(project)
 
       columns.each do |column|
@@ -51,9 +51,12 @@ class ListProjectIssuesTask < ApiTask
           github_username = issue["user"]["login"]
           days = days_since(issue["created_at"])
 
-          data[project['name']][state] ||= {}
-          data[project['name']][state][:issues] ||= []
-          data[project['name']][state][:issues] <<
+          data[project_id] ||= {}
+          data[project_id][:name] ||= project["name"]
+          data[project_id][:states] ||= {}
+          data[project_id][:states][state] ||= {}
+          data[project_id][:states][state][:issues] ||= []
+          data[project_id][:states][state][:issues] <<
             {
               url: issue["html_url"].gsub("https://", ""),
               title: truncate(issue["title"], 45),
@@ -63,7 +66,6 @@ class ListProjectIssuesTask < ApiTask
         end
       end
     end
-
     sort_by_created_at!(data)
     add_state_data!(data)
     puts render_template_with(data)
@@ -71,24 +73,15 @@ class ListProjectIssuesTask < ApiTask
 
   private
 
-  def validate_environment
-    if @project_ids.blank?
-      logger.fatal("project_ids not set")
-      puts "Please set project ids"
-      exit
-    end
-
-    super
-  end
-
   def fetch_projects
     # Documentation: https://developer.github.com/v3/projects
-    logger.info("Fetching info for project id(s): #{@project_ids.join(', ')}")
+    logger.info("Fetching projects")
 
     path = ["/repos", github_org, github_repo, "projects"].join("/")
     response = get(path)
+    project_ids = projects.keys
 
-    response.select { |project| @project_ids.include?(project["number"]) }
+    response.select { |project| project_ids.include?(project["number"]) }
   end
 
   def fetch_columns_for(project)
@@ -146,8 +139,8 @@ class ListProjectIssuesTask < ApiTask
   end
 
   def sort_by_created_at!(data)
-    data.each do |project, states|
-      states.each do |state, state_data|
+    data.each do |_project_id, project_data|
+      project_data[:states].each do |state, state_data|
         state_data[:issues].sort! do |issue_a, issue_b|
           # Github URLs get assigned by creation date, so just sort directly
           # on the URL
@@ -158,9 +151,9 @@ class ListProjectIssuesTask < ApiTask
   end
 
   def add_state_data!(data)
-    data.each do |project, states|
-      states.each do |state, state_data|
-        owner = config["projects"][project]["state_owners"][state]
+    data.each do |project_id, project_data|
+      project_data[:states].each do |state, state_data|
+        owner = config.dig("projects", project_id, "state_owners", state)
         display_name = config.dig("states", state, "display_name")
 
         state_data[:display_name] = display_name

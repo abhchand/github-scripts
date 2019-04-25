@@ -9,27 +9,27 @@ module GithubProjectsHelpers
   end
 
   def expected_projects_for(github_author)
-    projects = []
+    expected = []
 
-    config["projects"].each do |project, config|
-      members = config["members"]
-      projects << project if to_github_users(members).include?(github_author)
+    projects.each do |id, project_data|
+      members = project_data["members"]
+      expected << id if to_github_users(members).include?(github_author)
     end
 
-    projects.uniq
+    expected.uniq
   end
 
   def current_projects
     tries ||= 3
 
-    # Github presents the title as "<Column> in <Project>", so we also filter
-    # for that here
+    # Github has the project id embedded in the `data-hovercard-url`
+    # e.g. /callrail/callrail/projects/11/hovercard
     projects_element
       .find_elements(:class, "muted-link")
-      .map { |ml| ml["title"].split(" in ").last }
+      .map { |ml| ml["data-hovercard-url"].split("/")[-2].to_i }
 
-    rescue
-      retry unless (tries -= 1).zero?
+  rescue
+    retry unless (tries -= 1).zero?
   end
 
   def toggle_project(project_name)

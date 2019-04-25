@@ -4,7 +4,6 @@ require_relative "../tasks/list_project_issues_task"
 require "optparse"
 
 options = {}
-project_ids = nil
 
 parser = OptionParser.new do |opts|
   opts.banner = "\nUsage: bin/#{__FILE__} [options]"
@@ -12,9 +11,9 @@ parser = OptionParser.new do |opts|
   opts.on(
     "-pPROJECTIDS",
     "--project-ids=P1,P2,...",
-    "Required. Project IDs to filter (e.g. \"5,7\")"
+    "Run only against a subset of Project IDs (e.g. \"5,7\")."
   ) do |p|
-    project_ids = p.split(",").map(&:to_i)
+    options[:project_ids] = p.split(",").map(&:to_i)
   end
 
   options[:config_file] = BaseTask::DEFAULT_CONFIG_FILE
@@ -63,4 +62,4 @@ parser = OptionParser.new do |opts|
 end
 
 parser.parse!
-ListProjectIssuesTask.run!(project_ids, options)
+ListProjectIssuesTask.run!(options)

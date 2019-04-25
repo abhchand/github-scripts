@@ -30,11 +30,13 @@ class SetProjectTask < HeadlessBrowserTask
   end
 
   def run!
+    logger.info("Target project ids: #{projects.keys.join(', ')}")
+
     run_and_close_driver do
       log_in_to_github
 
-      members = config["projects"].values.map { |i| i["members"] }
-      github_author_whitelist = to_github_users(members.flatten.uniq)
+      members = projects.values.map { |p| p["members"] }.flatten.uniq
+      github_author_whitelist = to_github_users(members)
 
       each_pull_request do |url, github_author|
         github_author = github_author.downcase
