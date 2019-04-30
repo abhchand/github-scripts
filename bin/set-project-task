@@ -40,7 +40,7 @@ parser = OptionParser.new do |opts|
     "--github-repo=GITHUB_REPO",
     "Github repository for the project (default: '#{options[:github_repo]}')"
   ) do |r|
-    options[:github_repo] = o
+    options[:github_repo] = r
   end
 
   opts.on("-v", "--verbose", "Enable verbose output") do
