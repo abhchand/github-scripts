@@ -33,6 +33,8 @@ module GithubProjectsHelpers
   end
 
   def toggle_project(project_name)
+    tries ||= 0
+
     # The `sleep` statements account for async behavior in the browser
 
     # Open "Project" pop up
@@ -61,6 +63,14 @@ module GithubProjectsHelpers
 
     # Escape toggle closes window.
     driver.find_element(:tag_name, "body").send_keys(:escape)
+  rescue => e
+    if (tries += 1) >= 3
+      logger.debug "Attempt ##{tries} failed. Retrying."
+      # Reload page
+      visit driver.current_url, log: false
+      retry
+    end
+    logger.error "ERROR: Can not toggle project"
   end
 
   def click_projects_gear_icon
