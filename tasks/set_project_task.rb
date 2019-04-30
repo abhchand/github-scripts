@@ -45,10 +45,12 @@ class SetProjectTask < HeadlessBrowserTask
         logger.debug "Analyzing PR: ##{url.split('/').last} (#{github_author})"
         visit(url, log: false)
 
-        projects = expected_projects_for(github_author) - current_projects
-        logger.debug "  - Adding: #{projects}" if projects.any?
+        projects_to_add =
+          (expected_projects_for(github_author) - current_projects)
+          .map { |id| projects[id].fetch("name") }
+        logger.debug "  - Adding: #{projects_to_add}" if projects_to_add.any?
 
-        projects.each { |project| toggle_project(project) }
+        projects_to_add.each { |project_name| toggle_project(project_name) }
       end
     end
   end
