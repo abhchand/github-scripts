@@ -33,6 +33,15 @@ parser = OptionParser.new do |opts|
     options[:skip_columns] = s.split(",")
   end
 
+  options[:display_age_cutoff] = ListProjectIssuesTask::DISPLAY_AGE_CUTOFF
+  opts.on(
+    "-dDISPLAY_AGE",
+    "--display-age=DISPLAY_AGE",
+    "Specify the cutoff (in days) below which age is hidden (Default: #{options[:display_age_cutoff]})"
+  ) do |d|
+    options[:display_age_cutoff] = d.to_i
+  end
+
   options[:github_org] = BaseTask::DEFAULT_GITHUB_ORG
   opts.on(
     "-oGITHUB_ORG",

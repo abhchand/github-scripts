@@ -11,6 +11,8 @@
 require_relative "../shared/api_task"
 
 class ListProjectIssuesTask < ApiTask
+  DISPLAY_AGE_CUTOFF = 4
+
   def self.run!(opts = {})
     new(opts).run!
   end
@@ -61,7 +63,7 @@ class ListProjectIssuesTask < ApiTask
               url: issue["html_url"].gsub("https://", ""),
               title: truncate(issue["title"], 45),
               slack_username: find_slack_by_github(github_username),
-              days: (days if days > 2)
+              days: (days if days >= display_age_cutoff)
             }
         end
       end
@@ -184,6 +186,10 @@ class ListProjectIssuesTask < ApiTask
 
     # Count days, ignornig weekends
     (start_date..end_date).select { |d| (1..5).include?(d.wday) }.size
+  end
+
+  def display_age_cutoff
+    @opts[:display_age_cutoff] || DISPLAY_AGE_CUTOFF
   end
 
   def skip_column?(column)
