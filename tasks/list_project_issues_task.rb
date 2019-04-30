@@ -49,6 +49,8 @@ class ListProjectIssuesTask < ApiTask
 
         cards.each do |card|
           issue = fetch_issue_for(card)
+          next if issue.blank?
+
           state = state_for(issue)
           github_username = issue["user"]["login"]
           days = days_since(issue["created_at"])
@@ -111,7 +113,9 @@ class ListProjectIssuesTask < ApiTask
     logger.debug("Fetching issue for card ##{card['id']}")
 
     url = card["content_url"]
-    get(url)&.first
+    # If the card is not an issue (e.g. a note, etc..) it may not have a
+    # content url.
+    get(url)&.first if url
   end
 
   def state_name_to_label_mapping
