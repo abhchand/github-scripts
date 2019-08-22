@@ -8,7 +8,7 @@
 # Lists all issues in a project. Convenient format to copy-paste into Slack.
 
 require_relative "../shared/headless_browser_task"
-require_relative "../shared/github_projects_helpers"
+require_relative "../app/helpers/github_projects_helpers"
 
 class SetProjectTask < HeadlessBrowserTask
   include GithubProjectsHelpers

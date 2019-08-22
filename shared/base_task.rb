@@ -9,6 +9,7 @@
 #
 
 require_relative "multi_channel_logger"
+require_relative "../app/helpers/person_name_helpers"
 
 require "dotenv/load"
 require "active_support"
