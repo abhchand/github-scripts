@@ -28,6 +28,8 @@ class BaseTask
 
   DEFAULT_CONFIG_FILE = "config.yml".freeze
 
+  include PersonNameHelpers
+
   def initialize
     Time.zone = "UTC"
   end
@@ -64,42 +66,12 @@ class BaseTask
     @tz ||= config["tz"].present? ? config["tz"] : "UTC"
   end
 
-  def people
-    return @people if @people
-
-    @people = {}
-
-    # Ensure all keys are stored `downcase` to make searches case-insensitive
-    config["people"].each do |name, mapping|
-      @people[name.downcase] = {
-        "github" => mapping["github"].downcase,
-        "slack" => mapping["slack"].downcase
-      }
-    end
-  end
-
   def projects
     @projects ||= begin
       projects = config.dig("projects", github_org, github_repo) || {}
       project_ids = @opts[:project_ids] || projects.keys
 
       projects.select { |id, project_data| project_ids.include?(id) }
-    end
-  end
-
-  def to_github_users(people_list)
-    people_list.map { |name| people[name.downcase]["github"] }
-  end
-
-  def to_slack_user(person)
-    people[person.downcase]["slack"]
-  end
-
-  def find_slack_by_github(github_name)
-    people.each do |person, mapping|
-      if mapping["github"].downcase == github_name.downcase
-        return mapping["slack"]
-      end
     end
   end
 
