@@ -10,6 +10,7 @@
 #
 
 require_relative "base_task"
+require_relative "../app/helpers/github_api_helpers"
 
 require "httparty"
 
@@ -22,6 +23,7 @@ class ApiTask < BaseTask
   }
 
   include HTTParty
+  include GithubApiHelpers
 
   base_uri BASE_URI
   headers HEADERS
