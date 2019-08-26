@@ -1,0 +1,5 @@
+<% data.each do |project_name, pull_requests| %>
+=== <%= project_name %>
+<% pull_requests.each do |pull_request| %>
+<% author = pull_request[:author] %>
+- <%= pull_request[:url] %> <%= "(#{pull_request[:title]})" %> <%= "(\`#{author}\`)" %><% end %><% end %>

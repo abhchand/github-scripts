@@ -116,4 +116,17 @@ class BaseTask
       exit
     end
   end
+
+  def render_template(template_name, data)
+    template = File.join(ROOT, "templates", "#{template_name}.erb")
+
+    ERB.new(File.read(template)).result(binding).tap do |output|
+      output.gsub!("\n\n", "\n")
+    end
+  end
+
+  def truncate(str, len)
+    return str if str.length < len
+    str[0, len - 3] + "..."
+  end
 end

@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+require_relative "../tasks/list_modified_filenames_task"
+require "optparse"
+
+options = {}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "\nUsage: bin/#{__FILE__} [options]"
+
+  opts.on(
+    "-pPROJECTIDS",
+    "--project-ids=P1,P2,...",
+    "Run only against a subset of Project IDs (e.g. \"5,7\")."
+  ) do |p|
+    options[:project_ids] = p.split(",").map(&:to_i)
+  end
+
+  options[:config_file] = BaseTask::DEFAULT_CONFIG_FILE
+  opts.on(
+    "-cCONFIGFILE",
+    "--config-file=CONFIGFILE",
+    "Config File to use (default: #{options[:config_file]})"
+  ) do |c|
+    options[:config_file] = c
+  end
+
+  opts.on(
+    "-eEXCLUDE_SELF",
+    "--exclude-self=EXCLUDE_SELF",
+    "Optional. If true excludes project members' pull requests (default: 'false')"
+  ) do |s|
+    if s&.downcase == "true" || s&.downcase == "t" || s == 1 || s == "1"
+      options[:exclude_self] = true
+    else
+      options[:exclude_self] = false
+    end
+  end
+
+  options[:github_org] = BaseTask::DEFAULT_GITHUB_ORG
+  opts.on(
+    "-oGITHUB_ORG",
+    "--github-org=GITHUB_ORG",
+    "Github organization for the project (default: '#{options[:github_org]}')"
+  ) do |o|
+    options[:github_org] = o
+  end
+
+  options[:github_repo] = BaseTask::DEFAULT_GITHUB_REPO
+  opts.on(
+    "-rGITHUB_REPO",
+    "--github-repo=GITHUB_REPO",
+    "Github repository for the project (default: '#{options[:github_repo]}')"
+  ) do |r|
+    options[:github_repo] = r
+  end
+
+  opts.on("-v", "--verbose", "Enable verbose output") do
+    options[:verbose] = true
+  end
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end
+
+parser.parse!
+ListModifiedFilenames.run!(options)

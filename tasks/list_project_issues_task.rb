@@ -72,7 +72,7 @@ class ListProjectIssuesTask < ApiTask
     end
     sort_by_created_at!(data)
     add_state_data!(data)
-    puts render_template_with(data)
+    puts render_template("project-issues", data)
   end
 
   private
@@ -127,14 +127,6 @@ class ListProjectIssuesTask < ApiTask
     end
   end
 
-  def render_template_with(data)
-    template = File.join(ROOT, "templates", "project-issues.erb")
-
-    ERB.new(File.read(template)).result(binding).tap do |output|
-      output.gsub!("\n\n", "\n")
-    end
-  end
-
   def days_since(time)
     # Convert times to local user specified TZ
     # Assumes `time` is always in UTC
@@ -157,10 +149,5 @@ class ListProjectIssuesTask < ApiTask
 
   def skip_column?(column)
     @opts[:skip_columns].include?(column["name"].downcase)
-  end
-
-  def truncate(str, len)
-    return str if str.length < len
-    str[0, len - 3] + "..."
   end
 end

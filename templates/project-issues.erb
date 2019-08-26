@@ -1,6 +1,6 @@
-<% data.each do |project_id, proeject_data| %>
-=== <%= proeject_data[:name] %>
-<% proeject_data[:states].each do |state, state_data| %>
+<% data.each do |project_id, project_data| %>
+=== <%= project_data[:name] %>
+<% project_data[:states].each do |state, state_data| %>
 <% owner = state_data[:owner] %>
 *<%= state_data[:display_name] || "Unknown" %>*: <%= "(@#{owner})" if owner %>
 <% state_data[:issues].each do |issue| %>
