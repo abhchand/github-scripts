@@ -13,6 +13,7 @@ Available Tasks:
 - [Tasks](#tasks)
     - [Set Project](#task-set-project)
     - [List Issues in Project](task-list-project-issues)
+    - [List Modified Filenames](task-list-modified-filenames)
 
 ## <a name="quick-start"></a> Quick Start
 
@@ -67,3 +68,15 @@ bin/list-project-issues-task --project-ids=6,9 --skip-columns="Shipped","Code Re
 <p>
   <img src="meta/project-board.png" height="175" />
 </p>
+
+### <a name="task-list-modified-filenames"></a> List Modified Filenames
+
+Lists all issues in a project that modify filenames of a certain pattern
+
+```
+# List options
+bin/list-modified-filenames --help
+
+# Run
+bin/list-modified-filenames --project-ids=6,9
+```
