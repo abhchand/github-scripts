@@ -40,10 +40,10 @@ Automatically sets the "Project" on each Github PR to the appropriate team(s) ba
 
 ```
 # List options
-bin/set-project-task --help
+bin/set-project --help
 
 # Run
-bin/set-project-task
+bin/set-project
 ```
 
 <p>
@@ -56,13 +56,13 @@ Lists all issues in a project. Convenient format to copy-paste into Slack.
 
 ```
 # List options
-bin/list-project-issues-task --help
+bin/list-project-issues --help
 
 # Run
-bin/list-project-issues-task --project-ids=6,9
+bin/list-project-issues --project-ids=6,9
 
 # Skip certain columns in your Projects
-bin/list-project-issues-task --project-ids=6,9 --skip-columns="Shipped","Code Review"
+bin/list-project-issues --project-ids=6,9 --skip-columns="Shipped","Code Review"
 ```
 
 <p>
