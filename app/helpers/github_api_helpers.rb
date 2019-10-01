@@ -41,7 +41,7 @@ module GithubApiHelpers
   def fetch_columns_for(project)
     # Documentation: https://developer.github.com/v3/projects/columns
     logger.info(
-      "Fetching columns for project ##{project['id']} '#{project['name']}'"
+      "Fetching columns for project ##{project['number']} '#{project['name']}'"
     )
 
     url = project["columns_url"]
@@ -51,7 +51,7 @@ module GithubApiHelpers
   def fetch_cards_in(column)
     # Documentation: https://developer.github.com/v3/projects/cards
     logger.debug(
-      "Fetching cards for column ##{column['id']} '#{column['name']}'"
+      "Fetching cards for column ##{column['number']} '#{column['name']}'"
     )
 
     url = column["cards_url"]

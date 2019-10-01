@@ -2,8 +2,6 @@
 
 A series of helpful scripts to automate common github tasks.
 
-These scripts are implemented using the [Github REST API](https://developer.github.com/v3/) where possible. For some actions that are not supported through the API, the scripts use a headless browser to log in to github and perform the action.
-
 Available Tasks:
 
 | Task | Description |

@@ -7,9 +7,9 @@
 #
 # List Pull Requests that modify certain files
 
-require_relative "../shared/api_task"
+require_relative "../shared/base_task"
 
-class ListModifiedFilenames < ApiTask
+class ListModifiedFilenames < BaseTask
   def self.run!(opts = {})
     new(opts).run!
   end

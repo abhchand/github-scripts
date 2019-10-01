@@ -9,6 +9,7 @@
 #
 
 require_relative "multi_channel_logger"
+require_relative "../app/helpers/github_api_helpers"
 require_relative "../app/helpers/person_name_helpers"
 
 require "dotenv/load"
@@ -18,6 +19,7 @@ require "active_support/core_ext/time/zones"
 require "active_support/core_ext/numeric/time"
 
 require "yaml"
+require "httparty"
 
 class BaseTask
   attr_accessor :logger, :config
@@ -29,13 +31,64 @@ class BaseTask
 
   DEFAULT_CONFIG_FILE = "config.yml".freeze
 
+  BASE_URI = "https://api.github.com"
+  HEADERS = {
+    "User-Agent" => ENV["GITHUB_USERNAME"],
+    "Authorization" => "token #{ENV['GITHUB_ACCESS_TOKEN']}",
+    "Accept" => "application/vnd.github.inertia-preview+json"
+  }
+
+  include HTTParty
+  include GithubApiHelpers
+
   include PersonNameHelpers
+
+  base_uri BASE_URI
+  headers HEADERS
 
   def initialize
     Time.zone = "UTC"
   end
 
   private
+
+  def get(path, opts = {})
+    responses = []
+    page = 0
+
+    loop do
+      page += 1
+      paginated_path = append_page_param(path, page)
+      opts_label = opts.empty? ? "" : "(#{opts})"
+
+      logger.debug("\tGET #{paginated_path} #{opts_label}")
+      response = self.class.get(paginated_path, opts)
+
+      unless (200..299).member?(response.code)
+        logger.fatal(
+          "Got invalid response: (#{response.code}) #{response.body}"
+        )
+        exit
+      end
+
+      responses << JSON.parse(response.body)
+      break unless next_page?(response)
+    end
+
+    responses.flatten
+  end
+
+  def post(path, payload = {})
+    logger.debug("\tPOST #{path} (#{payload})")
+    response = self.class.post(path, body: payload.to_json)
+
+    unless (200..299).member?(response.code)
+      logger.fatal("Request failed: (#{response.code}) #{response.body}")
+      exit
+    end
+
+    JSON.parse(response.body)
+  end
 
   def access_token
     @access_token ||= ENV["GITHUB_ACCESS_TOKEN"]
@@ -110,6 +163,14 @@ class BaseTask
   end
 
   def validate_environment
+    logger.debug("Checking if ENV variables are set")
+
+    if access_token.blank?
+      logger.fatal("Env not set correctly")
+      puts "Please set `GITHUB_ACCESS_TOKEN` and `GITHUB_USERNAME`"
+      exit
+    end
+
     unless ActiveSupport::TimeZone::MAPPING.has_key?(tz)
       logger.fatal("Invalid timezone `#{tz}`")
       puts "Invalid timezone `#{tz}`"
@@ -128,5 +189,24 @@ class BaseTask
   def truncate(str, len)
     return str if str.length < len
     str[0, len - 3] + "..."
+  end
+
+  def append_page_param(path, page)
+    # No need to append param since `page` defaults to 1
+    return path if page == 1
+
+    path =~ /\?/ ? "#{path}&page=#{page}" : "#{path}?page=#{page}"
+  end
+
+  def next_page?(response)
+    # Github returns a "link" header that specifies the next paginated
+    # value.
+    #
+    # Link: "<https://api.github.com/repositories/1461037/pulls?page=2>;
+    #   rel=\"next\", <https://api.github.com/repositories/1461037/pulls?page=3>; rel=\"last\""
+    #
+    # Note: We don't use the URL provided by github, we just keep track of our
+    # own page counter
+    response.headers["link"] =~ /rel=\"next\"/
   end
 end

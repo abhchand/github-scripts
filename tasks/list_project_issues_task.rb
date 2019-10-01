@@ -8,9 +8,9 @@
 # Automatically sets the "Project" on each Github PR to the appropriate team(s)
 # based on the mapping of users to projects you specify.
 
-require_relative "../shared/api_task"
+require_relative "../shared/base_task"
 
-class ListProjectIssuesTask < ApiTask
+class ListProjectIssuesTask < BaseTask
   DISPLAY_AGE_CUTOFF = 4
 
   def self.run!(opts = {})
