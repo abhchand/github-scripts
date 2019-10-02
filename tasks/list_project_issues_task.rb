@@ -118,7 +118,7 @@ class ListProjectIssuesTask < BaseTask
   def add_state_data!(data)
     data.each do |project_id, project_data|
       project_data[:states].each do |state, state_data|
-        owner = config.dig("projects", project_id, "state_owners", state)
+        owner = config.dig("projects", github_org, github_repo, project_id, "state_owners", state)
         display_name = config.dig("states", state, "display_name")
 
         state_data[:display_name] = display_name
