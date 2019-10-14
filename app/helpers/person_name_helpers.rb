@@ -18,7 +18,7 @@ module PersonNameHelpers
   end
 
   def to_github_user(person)
-    people[person.downcase]["github"]
+    people[person.downcase]["github"]&.downcase
   end
 
   def to_slack_users(people_list)

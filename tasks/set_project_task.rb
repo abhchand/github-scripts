@@ -72,7 +72,7 @@ class SetProjectTask < BaseTask
     @members ||= projects.values.map { |p| p["members"] }.flatten.uniq
     @author_whitelist ||= to_github_users(@members)
 
-    @author_whitelist.include?(author)
+    @author_whitelist.include?(author.downcase)
   end
 
   def missing_projects_for(pull_request)
@@ -94,7 +94,7 @@ class SetProjectTask < BaseTask
 
     projects.each do |id, project_data|
       members = project_data["members"]
-      if to_github_users(members).include?(author)
+      if to_github_users(members).include?(author.downcase)
         @expected_project_ids[author] << id
       end
     end
