@@ -33,7 +33,7 @@ class BaseTask
 
   BASE_URI = "https://api.github.com"
   HEADERS = {
-    "User-Agent" => ENV["GITHUB_USERNAME"],
+    "User-Agent" => [github_org, github_repo].join("/"),
     "Authorization" => "token #{ENV['GITHUB_ACCESS_TOKEN']}",
     "Accept" => "application/vnd.github.inertia-preview+json"
   }
@@ -92,18 +92,6 @@ class BaseTask
 
   def access_token
     @access_token ||= ENV["GITHUB_ACCESS_TOKEN"]
-  end
-
-  def username
-    @username ||= ENV["GITHUB_USERNAME"]
-  end
-
-  def password
-    @password ||= ENV["GITHUB_PASSWORD"]
-  end
-
-  def otp_secret
-    @otp_secret ||= ENV["GITHUB_OTP_SECRET"]
   end
 
   def github_org
@@ -167,7 +155,7 @@ class BaseTask
 
     if access_token.blank?
       logger.fatal("Env not set correctly")
-      puts "Please set `GITHUB_ACCESS_TOKEN` and `GITHUB_USERNAME`"
+      puts "Please set `GITHUB_ACCESS_TOKEN`"
       exit
     end
 
