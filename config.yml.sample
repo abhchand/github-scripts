@@ -22,12 +22,17 @@
   # Define a list of states and one or more github labels they
   # correspond to.
   #
+  # "none" is an special (optional) keyword that defines a state
+  # to be used when a Pull Request does not have one of the
+  # other defined labels below.
+
 
   states:
     development:
       display_name: In Development
       labels:
         - "WIP :construction:"
+        - none
     code_review:
       display_name: In Code Review
       labels:

@@ -98,9 +98,24 @@ class ListProjectIssuesTask < BaseTask
   def state_for(issue)
     labels = labels_for(issue)
 
+    return no_applicable_label_state unless any_applicable_labels?(labels)
+
     state_name_to_label_mapping.select do |_state_name, whitelabels|
       (whitelabels & labels).any?
     end.keys.first
+  end
+
+  def any_applicable_labels?(labels)
+    applicable_labels = state_name_to_label_mapping.values.flatten.uniq
+    labels.any? && applicable_labels.any? && (labels & applicable_labels).any?
+  end
+
+  def no_applicable_label_state
+    @no_applicable_label_state ||=
+      @state_name_to_label_mapping
+        .select { |k, v| v.include?("none") }
+        .keys
+        .first
   end
 
   def sort_by_created_at!(data)
