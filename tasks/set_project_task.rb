@@ -109,7 +109,7 @@ class SetProjectTask < BaseTask
   end
 
   def add_project_to_pull_request(pull_request, project)
-    logger.debug "  - Adding to project: '#{project['name']}'"
+    logger.info "  - Adding to project: '#{project['name']}'"
 
     # Right now just get the first column.
     # TODO: Add to column based on status

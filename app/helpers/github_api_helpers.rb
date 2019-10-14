@@ -51,7 +51,7 @@ module GithubApiHelpers
   def fetch_cards_in(column)
     # Documentation: https://developer.github.com/v3/projects/cards
     logger.debug(
-      "Fetching cards for column ##{column['number']} '#{column['name']}'"
+      "Fetching cards for column ##{column['id']} '#{column['name']}'"
     )
 
     url = column["cards_url"]
