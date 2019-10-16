@@ -33,7 +33,7 @@ class BaseTask
 
   BASE_URI = "https://api.github.com"
   HEADERS = {
-    "User-Agent" => [github_org, github_repo].join("/"),
+    "User-Agent" => ["abhchand/github-scripts", `whoami`].join(":"),
     "Authorization" => "token #{ENV['GITHUB_ACCESS_TOKEN']}",
     "Accept" => "application/vnd.github.inertia-preview+json"
   }
