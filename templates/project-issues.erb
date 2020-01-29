@@ -4,6 +4,6 @@
 <% owner = state_data[:owner] %>
 *<%= state_data[:display_name] || "Unknown" %>*: <%= "(@#{owner})" if owner %>
 <% state_data[:issues].each do |issue| %>
-- <%= issue[:url] %> (<%= issue[:title] %>)<%= " (#{issue[:days]} days)" if issue[:days] %><%= " (@#{issue[:slack_username]})" if issue[:slack_username] %><% end %>
+- <%= issue[:url] %> (<%= issue[:title] %>)<%= " (#{issue[:days]} days)" if issue[:days] %><%= " (@#{issue[:slack_username]})" if issue[:slack_username] %><%= " (`DON'T SHIP`)" if issue[:dont_ship] %><% end %>
 <% end %>
 <% end %>

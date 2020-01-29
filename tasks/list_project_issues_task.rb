@@ -12,6 +12,7 @@ require_relative "../shared/base_task"
 
 class ListProjectIssuesTask < BaseTask
   DISPLAY_AGE_CUTOFF = 4
+  DONT_SHIP_LABEL = "Don't Ship".freeze
 
   def self.run!(opts = {})
     new(opts).run!
@@ -65,7 +66,8 @@ class ListProjectIssuesTask < BaseTask
               url: issue["html_url"].gsub("https://", ""),
               title: truncate(issue["title"], 45),
               slack_username: find_slack_by_github(github_username),
-              days: (days if days >= display_age_cutoff)
+              days: (days if days >= display_age_cutoff),
+              dont_ship: label_names_for(issue).include?(DONT_SHIP_LABEL)
             }
         end
       end

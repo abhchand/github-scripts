@@ -67,4 +67,8 @@ module GithubApiHelpers
     # content url.
     get(url)&.first if url
   end
+
+  def label_names_for(issue)
+    issue["labels"].map { |l| l["name"] }
+  end
 end
