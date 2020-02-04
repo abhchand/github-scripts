@@ -5,7 +5,7 @@
 
   #
   # Define a list of people.
-  # Use the same name to refer to people in the configs below
+  # You'll use this same name to refer to people in the configs below
   #
   people:
     abhishek:
@@ -32,17 +32,20 @@
       display_name: In Development
       labels:
         - "WIP :construction:"
+        - Reopened
         - none
     code_review:
       display_name: In Code Review
       labels:
         - "Code Review :mag:"
         - ":eyes: Code Review"
+        - "Code OK :+1:"
     qa_review:
       display_name: Ready for QA Review
       labels:
         - "QA Review"
         - ":hammer: QA Review"
+        - "QA OK :+1:"
     product_review:
       display_name: Ready for Product Review
       labels:
@@ -50,26 +53,24 @@
     ready_to_ship:
       display_name:  Ready for Deploy
       labels:
-        - "QA OK :+1:"
-        - ":white_check_mark: QA Ok"
-        - "Product OK :+1"
+        - "Ready to Ship"
 
   #
-  # Define a list of projects. Each project key should correspond to an actual Github
-  # Project board ID!
+  # Define a list of projects.
+  # Each project key should correspond to an actual Github Project board ID!
   #
   projects:
     callrail:
       callrail:
         4:
-          # Required: Must match the name of the Github Project
+          # Required: (IMPORTANT!) Must match the *actual* name of the Github Project
           name: Billing Team
-          # Required: Define which people are associated with this project
+          # Required: Specify which people are associated with this project
+          # This should reference the list of people you defined above
           members:
             - abhishek
             - matty
-          # Optional. Assign owners or responsible party
-          # for each state defined above.
+          # Optional. Assign owners or responsible party for any states defined above.
           state_owners:
             qa_review: serena
             product_review: abhishek
