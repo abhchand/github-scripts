@@ -5,8 +5,7 @@
 #  \______  (____  /____/____/____|_  /(____  /__|____/
 #         \/     \/                 \/      \/
 #
-# Automatically sets the "Project" on each Github PR to the appropriate team(s)
-# based on the mapping of users to projects you specify.
+# Lists all issues under a project, grouped by state
 
 require_relative "../shared/base_task"
 
