@@ -166,7 +166,7 @@ class BaseTask
     end
   end
 
-  def render_template(template_name, data)
+  def render_template(template_name, *args)
     template = File.join(ROOT, "templates", "#{template_name}.erb")
 
     ERB.new(File.read(template)).result(binding).tap do |output|
