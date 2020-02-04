@@ -1,0 +1,10 @@
+<% data = args[0] %>
+
+<% data.each do |project_id, project_data| %>
+<% if project_data.any? %>
+The following PRs are missing TP stories. Please add if needed:
+<% project_data.each do |issue| %>
+- <%= issue[:url] %> <%= " (@#{issue[:slack_username]})" if issue[:slack_username] %>
+<% end %>
+<% end %>
+<% end %>

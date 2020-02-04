@@ -68,7 +68,42 @@ module GithubApiHelpers
     get(url)&.first if url
   end
 
+  def each_issue(&block)
+    logger.info("Target project ids: #{projects.keys.join(', ')}")
+
+    fetch_projects.each do |project|
+      project_id = project["number"]
+      columns = fetch_columns_for(project)
+
+      columns.each do |column|
+        if skip_column?(column)
+          logger.info("Skipping column #{column['name']}")
+          next
+        end
+
+        cards = fetch_cards_in(column)
+
+        cards.each do |card|
+          issue = fetch_issue_for(card)
+          next if issue.blank?
+
+          metadata = {
+            project: project,
+            column: column,
+            card: card
+          }
+
+          yield(issue, metadata) if block_given?
+        end
+      end
+    end
+  end
+
   def label_names_for(issue)
     issue["labels"].map { |l| l["name"] }
+  end
+
+  def skip_column?(column)
+    @opts[:skip_columns].include?(column["name"].downcase)
   end
 end
