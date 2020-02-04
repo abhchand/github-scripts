@@ -33,44 +33,27 @@ class ListProjectIssuesTask < BaseTask
   def run!
     data = {}
 
-    logger.info("Target project ids: #{projects.keys.join(', ')}")
+    each_issue do |issue, metadata|
+      project_id  = metadata[:project]["number"]
+      state = state_for(issue)
+      github_username = issue["user"]["login"]
+      days = days_since(issue["created_at"])
 
-    fetch_projects.each do |project|
-      project_id = project["number"]
-      columns = fetch_columns_for(project)
-
-      columns.each do |column|
-        if skip_column?(column)
-          logger.info("Skipping column #{column['name']}")
-          next
-        end
-
-        cards = fetch_cards_in(column)
-
-        cards.each do |card|
-          issue = fetch_issue_for(card)
-          next if issue.blank?
-
-          state = state_for(issue)
-          github_username = issue["user"]["login"]
-          days = days_since(issue["created_at"])
-
-          data[project_id] ||= {}
-          data[project_id][:name] ||= project["name"]
-          data[project_id][:states] ||= {}
-          data[project_id][:states][state] ||= {}
-          data[project_id][:states][state][:issues] ||= []
-          data[project_id][:states][state][:issues] <<
-            {
-              url: issue["html_url"].gsub("https://", ""),
-              title: truncate(issue["title"], 45),
-              slack_username: find_slack_by_github(github_username),
-              days: (days if days >= display_age_cutoff),
-              dont_ship: label_names_for(issue).include?(DONT_SHIP_LABEL)
-            }
-        end
-      end
+      data[project_id] ||= {}
+      data[project_id][:name] ||= metadata[:project]["name"]
+      data[project_id][:states] ||= {}
+      data[project_id][:states][state] ||= {}
+      data[project_id][:states][state][:issues] ||= []
+      data[project_id][:states][state][:issues] <<
+        {
+          url: issue["html_url"].gsub("https://", ""),
+          title: truncate(issue["title"], 45),
+          slack_username: find_slack_by_github(github_username),
+          days: (days if days >= display_age_cutoff),
+          dont_ship: label_names_for(issue).include?(DONT_SHIP_LABEL)
+        }
     end
+
     sort_by_created_at!(data)
     add_state_data!(data)
     puts render_template("project-issues", data)
@@ -161,9 +144,5 @@ class ListProjectIssuesTask < BaseTask
 
   def display_age_cutoff
     @opts[:display_age_cutoff] || DISPLAY_AGE_CUTOFF
-  end
-
-  def skip_column?(column)
-    @opts[:skip_columns].include?(column["name"].downcase)
   end
 end
