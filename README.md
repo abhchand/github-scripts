@@ -23,11 +23,11 @@ Then set up the project as follows:
 bundle install
 
 # Create and fill out an `.env` file based on the provided sample
-cp .env.sample .env
+cp sample.env .env
 vi .env
 
 # Create and fill out a `config.yml` file base on the provided sample
-cp config.yml.sample config.yml
+cp config.sample.yml config.yml
 vi config.yml
 ```
 
