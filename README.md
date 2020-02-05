@@ -65,7 +65,7 @@ Lists all issues in a project. Convenient format to copy-paste into Slack.
 ```
 bin/list-project-issues --project-ids=6,9
 
-# Or, skip certain columns in your Projects
+# You may want to consider skipping certain columns in your Projects
 bin/list-project-issues --project-ids=6,9 --skip-columns="Shipped","Code Review"
 ```
 
@@ -89,4 +89,4 @@ Lists all issues that do not reference a TP story in the body or title.
 
 ```
 bin/list-unaccounted-issues --project-ids=11,15
-``
+```
