@@ -7,9 +7,9 @@ Available Tasks:
 | Task | Description |
 | ------------- | ------------- |
 | [Set Project](#task-set-project) | Ensure a "Project" is always set on certain PRs |
-| [List Issues in Project](#task-list-project-issues) | List all Issues in a Project |
-| [List Modified Filenames](task-list-modified-filenames) | List all Issues that are touching files you care about |
-| [List Unaccounted Issues](task-list-unaccounted-issues) | List all Issues that do not reference a TP story |
+| [List Issues in Project](#task-list-project-issues) | List all PRs in a Project |
+| [List Modified Filenames](task-list-modified-filenames) | List all PRs that are touching files you care about |
+| [List Unaccounted Issues](task-list-unaccounted-issues) | List all PRs that do not reference a TP story |
 
 
 ## <a name="quick-start"></a> Quick Start
