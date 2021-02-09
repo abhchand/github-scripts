@@ -38,6 +38,8 @@ class BaseTask
     "Accept" => "application/vnd.github.inertia-preview+json"
   }
 
+  class GithubPostError < StandardError; end;
+
   include HTTParty
   include GithubApiHelpers
 
@@ -83,8 +85,12 @@ class BaseTask
     response = self.class.post(path, body: payload.to_json)
 
     unless (200..299).member?(response.code)
-      logger.fatal("Request failed: (#{response.code}) #{response.body}")
-      exit
+      logger.error("Request failed: (#{response.code}) #{response.body}")
+      # response.body is a hash with an `:error` key. Seems like
+      # `raise` automatically looks for the `:error` key and sets that as
+      # the whole error message when raised, so the other data won't be
+      # available in any `rescue` block
+      raise GithubPostError, response.body
     end
 
     JSON.parse(response.body)

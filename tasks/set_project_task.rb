@@ -118,6 +118,9 @@ class SetProjectTask < BaseTask
     path = ["/projects", "columns", column["id"], "cards"].join("/")
     payload = { content_id: pull_request["id"], content_type: "PullRequest" }
 
-    post(path, payload)
+    response = post(path, payload)
+  rescue GithubPostError => e
+    return if e.message =~ /validation failed/i
+    raise
   end
 end
